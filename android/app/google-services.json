@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "737715799154",
+    "project_id": "educational-app-9cff9",
+    "storage_bucket": "educational-app-9cff9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:737715799154:android:233cbe823cecd4c3896eeb",
+        "android_client_info": {
+          "package_name": "com.example.educational_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "737715799154-ashrn501d9shsigpd12sv2g0uk8cnglb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjCokGZLQwyDrYVBTVlMVWf3PjUPWHepU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "737715799154-ashrn501d9shsigpd12sv2g0uk8cnglb.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "737715799154-i0ck1vm2aqcdoqruop2qpbagl5dvu6i3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "kz.setdata"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
