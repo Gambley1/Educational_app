@@ -1,0 +1,11 @@
+GET  https://reqres.in/api/users
+
+###
+
+POST https://reqres.in/api/users
+Content-Type: application/json
+
+{
+    "username": "user",
+    "password": "helloworld"
+}

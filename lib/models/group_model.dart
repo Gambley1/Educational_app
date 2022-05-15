@@ -5,7 +5,7 @@ class GroupResponse {
   });
 
   factory GroupResponse.fromJson(Map<String, dynamic> json) => GroupResponse(
-        groups: List<Group>.from(json["people"].map((x) => Group.fromJson(x))),
+        groups: List<Group>.from(json["groups"].map((x) => Group.fromJson(x))),
       );
 }
 
@@ -19,6 +19,6 @@ class Group {
 
   factory Group.fromJson(Map<String, dynamic> json) => Group(
         name: json["name"],
-        id: json["id"] == null ? null : json["id"],
+        id: json["id"],
       );
 }

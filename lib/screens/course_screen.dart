@@ -1,18 +1,16 @@
 import 'package:educational_app/constants/colors.dart';
-import 'package:educational_app/models/group_model.dart';
 import 'package:educational_app/models/subjects_model.dart';
-import 'package:educational_app/screens/details_screen.dart';
 import 'package:educational_app/services/group_service.dart';
-import 'package:educational_app/services/login_service.dart';
 import 'package:flutter/material.dart';
 
+import '../models/data_model.dart';
+import 'lesson_screen.dart';
+
 class CourseScreen extends StatefulWidget {
-  final Subject subject;
-  final Group? group;
+  final Subject? subject;
   const CourseScreen({
     Key? key,
-    this.group,
-    required this.subject,
+    this.subject,
   }) : super(key: key);
 
   @override
@@ -20,66 +18,90 @@ class CourseScreen extends StatefulWidget {
 }
 
 class _CourseScreenState extends State<CourseScreen> {
+  late Future<List<Datum>?> futureListGroup;
+
+  @override
+  void initState() {
+    futureListGroup = GroupService().getListOfGroups();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-          child: Center(
-        child: FutureBuilder<List<Group>?>(
-            future: GroupService.getListOfGroups(),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              } else {
-                return CustomScrollView(slivers: [
-                  SliverGrid(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        return Container(
-                          child: Text(snapshot.data![index].name!),
-                        );
-                      },
-                      childCount: snapshot.data!.length,
+      body: FutureBuilder<List<Datum>?>(
+        // initstate Future<List<Datum>>.GroupService().getListOfGroups() to call it only once per frame
+        // futureListGroup is equal to GroupService().getListOfGroups()
+        future: futureListGroup,
+        builder: (context, snapshot) {
+          if (snapshot.data != null) {
+            return CustomScrollView(
+              slivers: [
+                SliverAppBar(
+                  backgroundColor: kPrimaryColor,
+                  floating: true,
+                  flexibleSpace: FlexibleSpaceBar(
+                    title: RichText(
+                      text: TextSpan(
+                          text: widget.subject!.name,
+                          style: Theme.of(context).textTheme.titleLarge),
                     ),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 15,
-                      crossAxisSpacing: 10,
-                      childAspectRatio: 1.1,
-                    ),
+                    centerTitle: false,
                   ),
-                ]);
-              }
-            }),
-      )),
+                ),
+                SliverGrid(
+                  delegate: SliverChildBuilderDelegate(
+                      (context, index) => GroupViewModel(
+                            data: snapshot.data![index],
+                          ),
+                      childCount: snapshot.data!.length),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 1,
+                    childAspectRatio: 2.7,
+                  ),
+                )
+              ],
+            );
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
+      ),
     );
   }
 }
 
-class GroupCard extends StatelessWidget {
-  final Group group;
-  const GroupCard({
+class GroupViewModel extends StatelessWidget {
+  final Datum data;
+  const GroupViewModel({
     Key? key,
-    required this.group,
+    required this.data,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => LessonScreen(
+                      data: data,
+                    )));
+      },
       child: Padding(
-        padding: const EdgeInsets.all(9.0),
+        padding: const EdgeInsets.all(12.0),
         child: Container(
-          padding: const EdgeInsets.only(left: 10),
+          padding: const EdgeInsets.all(17),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(15),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(.1),
+                color: Colors.black.withOpacity(.35),
+                // offset: Offset.zero,
                 blurRadius: 4.0,
                 spreadRadius: .05,
               ), //BoxShadow
@@ -88,13 +110,24 @@ class GroupCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(
-                height: 13,
+              Text(
+                'Name: ' + data.name!,
+                style: Theme.of(context).textTheme.bodyLarge,
               ),
               const SizedBox(
-                height: 10,
+                height: 5,
               ),
-              Text(group.name!, style: Theme.of(context).textTheme.bodyLarge),
+              Text(
+                'year: ' + data.year.toString(),
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              Text(
+                'pantone Value: ' + data.pantoneValue.toString(),
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
             ],
           ),
         ),

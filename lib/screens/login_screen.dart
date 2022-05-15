@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:educational_app/screens/home/home_screen.dart';
 import 'package:educational_app/screens/register_screen.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +21,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
   final TextEditingController userNameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    userNameController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,37 +83,27 @@ class _LoginScreenState extends State<LoginScreen> {
       borderRadius: BorderRadius.circular(30),
       color: Colors.redAccent,
       child: MaterialButton(
-          padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-          minWidth: MediaQuery.of(context).size.width,
-          onPressed: () async {
-            // signIn(userNameController.text, passwordController.text);
-            if (_formKey.currentState!.validate()) {
-              UserModel user = await _loginService.login(
-                  userNameController.text, passwordController.text);
-              if (user != null) {
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (_) => HomeScreen(user: user),
-                  ),
-                );
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    duration: Duration(seconds: 3),
-                    content: Text(
-                      'Error with your token, have to login again',
-                    ),
-                  ),
-                );
-              }
-            }
-          },
-          child: const Text(
-            "Войти",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
-          )),
+        padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
+        minWidth: MediaQuery.of(context).size.width,
+        onPressed: () async {
+          // signIn(userNameController.text, passwordController.text);
+          if (_formKey.currentState!.validate()) {
+            UserModel user = await _loginService.login(
+                userNameController.text, passwordController.text);
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (_) => HomeScreen(user: user),
+              ),
+            );
+          }
+        },
+        child: const Text(
+          "Войти",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+      ),
     );
 
     return Scaffold(
@@ -128,25 +123,29 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 35),
                 loginButton,
                 const SizedBox(height: 15),
-                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  const Text("Ещё не зарегестрированны? "),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushAndRemoveUntil(
-                          (context),
-                          MaterialPageRoute(
-                              builder: (context) => const RegisterScreen()),
-                          (route) => false);
-                    },
-                    child: const Text(
-                      "Регестрация",
-                      style: TextStyle(
-                          color: Colors.redAccent,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15),
-                    ),
-                  )
-                ]),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text("Ещё не зарегестрированны? "),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushAndRemoveUntil(
+                            (context),
+                            MaterialPageRoute(
+                              builder: (context) => const RegisterScreen(),
+                            ),
+                            (route) => false);
+                      },
+                      child: const Text(
+                        "Регестрация",
+                        style: TextStyle(
+                            color: Colors.redAccent,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15),
+                      ),
+                    )
+                  ],
+                ),
               ],
             ),
           ),

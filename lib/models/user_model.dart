@@ -12,8 +12,17 @@ class UserModel {
   String? token;
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
-        email: json["email"],
-        password: json["password"],
-        token: json["token"],
+        email: json["email"] ?? 'Почта Недоступна',
+        password: json["password"] ?? 'Пароль Недоступнен',
+        token: json["acces_token"] ?? 'Токен Недоступнен',
+        username: json["username"] ?? 'Имя Недоступно',
       );
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> userData = <String, dynamic>{};
+    userData['email'] = email;
+    userData['password'] = password;
+    userData['token'] = token;
+    userData['username'] = username;
+    return userData;
+  }
 }

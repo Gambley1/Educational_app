@@ -33,67 +33,72 @@ class _HomeScreenState extends State<HomeScreen> {
       SettingsScreen(),
     ];
     return Scaffold(
-      drawer: NavBar(user: widget.user,),
+      drawer: NavBar(
+        user: widget.user,
+      ),
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          selectedItemColor: kPrimaryColor,
-          backgroundColor: Colors.white,
-          elevation: 0,
-          items: [
-            BottomNavigationBarItem(
-              activeIcon: Image.asset(
-                icFeatured,
-                height: kBottomNavigationBarItemSize,
-              ),
-              icon: Image.asset(
-                icFeaturedOutlined,
-                height: kBottomNavigationBarItemSize,
-              ),
-              label: "Уроки",
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: kPrimaryColor,
+        backgroundColor: Colors.white,
+        elevation: 0,
+        items: [
+          BottomNavigationBarItem(
+            activeIcon: Image.asset(
+              icFeatured,
+              height: kBottomNavigationBarItemSize,
             ),
-            BottomNavigationBarItem(
-              activeIcon: Image.asset(
-                icLearning,
-                height: kBottomNavigationBarItemSize,
-              ),
-              icon: Image.asset(
-                icLearningOutlined,
-                height: kBottomNavigationBarItemSize,
-              ),
-              label: "Задания",
+            icon: Image.asset(
+              icFeaturedOutlined,
+              height: kBottomNavigationBarItemSize,
             ),
-            BottomNavigationBarItem(
-              activeIcon: Image.asset(
-                icWishlist,
-                height: kBottomNavigationBarItemSize,
-              ),
-              icon: Image.asset(
-                icWishlistOutlined,
-                height: kBottomNavigationBarItemSize,
-              ),
-              label: "Успеваемость",
+            label: "Уроки",
+          ),
+          BottomNavigationBarItem(
+            activeIcon: Image.asset(
+              icLearning,
+              height: kBottomNavigationBarItemSize,
             ),
-            BottomNavigationBarItem(
-              activeIcon: Image.asset(
-                icSetting,
-                height: kBottomNavigationBarItemSize,
-              ),
-              icon: Image.asset(
-                icSettingOutlined,
-                height: kBottomNavigationBarItemSize,
-              ),
-              label: "Настройки",
+            icon: Image.asset(
+              icLearningOutlined,
+              height: kBottomNavigationBarItemSize,
             ),
-          ],
-          currentIndex: _selectedIndex,
-          onTap: (int index) {
-            setState(() {
+            label: "Задания",
+          ),
+          BottomNavigationBarItem(
+            activeIcon: Image.asset(
+              icWishlist,
+              height: kBottomNavigationBarItemSize,
+            ),
+            icon: Image.asset(
+              icWishlistOutlined,
+              height: kBottomNavigationBarItemSize,
+            ),
+            label: "Успеваемость",
+          ),
+          BottomNavigationBarItem(
+            activeIcon: Image.asset(
+              icSetting,
+              height: kBottomNavigationBarItemSize,
+            ),
+            icon: Image.asset(
+              icSettingOutlined,
+              height: kBottomNavigationBarItemSize,
+            ),
+            label: "Настройки",
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        onTap: (int index) {
+          setState(
+            () {
               _selectedIndex = index;
-            });
-          }),
+            },
+          );
+        },
+      ),
     );
   }
 }

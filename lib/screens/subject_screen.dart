@@ -1,14 +1,21 @@
+import 'dart:math';
+
 import 'package:educational_app/constants/colors.dart';
+import 'package:educational_app/models/data_model.dart';
 import 'package:educational_app/models/subjects_model.dart';
 import 'package:educational_app/models/user_model.dart';
+import 'package:educational_app/services/group_service.dart';
 import 'package:flutter/material.dart';
 
-import '../models/group_model.dart';
 import 'course_screen.dart';
 
 class SubjectScreen extends StatefulWidget {
-  const SubjectScreen({Key? key,}) : super(key: key);
- 
+  final List<Datum>? data;
+  const SubjectScreen({
+    Key? key,
+    this.data,
+  }) : super(key: key);
+
   @override
   _SubjectScreenState createState() => _SubjectScreenState();
 }
@@ -16,60 +23,84 @@ class SubjectScreen extends StatefulWidget {
 class _SubjectScreenState extends State<SubjectScreen> {
   late UserModel user;
 
+  late Future<List<Datum>?> futureListGroup;
+
+  @override
+  void initState() {
+    futureListGroup = GroupService().getListOfGroups();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(slivers: [
-      SliverAppBar(
-        backgroundColor: kPrimaryColor,
-        floating: true,
-        flexibleSpace: FlexibleSpaceBar(
-          title: RichText(
-            text: const TextSpan(
-              children: <TextSpan>[
-                TextSpan(
-                  text: '',
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 18),
+    return FutureBuilder<List<Datum>?>(
+      future: futureListGroup,
+      builder: (context, snapshot) {
+        if (snapshot.data != null) {
+          return CustomScrollView(
+            slivers: [
+              SliverAppBar(
+                backgroundColor: kPrimaryColor,
+                floating: true,
+                flexibleSpace: FlexibleSpaceBar(
+                  title: RichText(
+                    text: TextSpan(
+                      children: <TextSpan>[
+                        // TextSpan(
+                        //   text: '',
+                        //   style: TextStyle(
+                        //       color: Colors.black,
+                        //       fontWeight: FontWeight.w500,
+                        //       fontSize: 18),
+                        // ),
+                        TextSpan(
+                          text: 'Класс',
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                      ],
+                    ),
+                  ),
+                  centerTitle: false,
                 ),
-                TextSpan(
-                  text: 'Класс',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 23),
+              ),
+              SliverGrid(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    return CategoryCard(
+                      data: snapshot.data,
+                      dataModel: snapshot.data![index],
+                      subject: subjectList[index],
+                    );
+                  },
+                  childCount: subjectList.length,
                 ),
-              ],
-            ),
-          ),
-          centerTitle: false,
-        ),
-      ),
-      SliverGrid(
-        delegate: SliverChildBuilderDelegate(
-          (context, index) {
-            return CategoryCard(
-              subject: subjectList[index],
-            );
-          },
-          childCount: subjectList.length,
-        ),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          mainAxisSpacing: 15,
-          crossAxisSpacing: 10,
-          childAspectRatio: 1.1,
-        ),
-      ),
-    ]);
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 15,
+                  crossAxisSpacing: 10,
+                  childAspectRatio: 1.1,
+                ),
+              ),
+            ],
+          );
+        } else {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      },
+    );
   }
 }
 
 class CategoryCard extends StatelessWidget {
   final Subject subject;
+  final List<Datum>? data;
+  final Datum? dataModel;
   const CategoryCard({
     Key? key,
+    this.data,
+    this.dataModel,
     required this.subject,
   }) : super(key: key);
 
@@ -79,7 +110,9 @@ class CategoryCard extends StatelessWidget {
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => CourseScreen(subject: subject,),
+          builder: (context) => CourseScreen(
+            subject: subject,
+          ),
         ),
       ),
       child: Padding(
@@ -116,7 +149,14 @@ class CategoryCard extends StatelessWidget {
               ),
               Text(subject.name, style: Theme.of(context).textTheme.bodyLarge),
               Text(
-                "${subject.noOfCourses.toString()} курсов",
+                data!.length.toString() + ' курсов',
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              Text(
+                'id: ' + dataModel!.id.toString(),
                 style: Theme.of(context).textTheme.bodySmall,
               ),
             ],

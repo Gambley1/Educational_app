@@ -1,49 +1,40 @@
+import 'package:educational_app/models/data_model.dart';
+
 class Subject {
   String thumbnail;
   String name;
-  int noOfCourses;
 
   Subject({
     required this.name,
-    required this.noOfCourses,
     required this.thumbnail,
   });
 }
 
+late List<Datum>? data;
+
 List<Subject> subjectList = [
   Subject(
     name: 'Алгебра',
-    noOfCourses: 0,
     thumbnail: 'assets/icons/algebra.png',
   ),
   Subject(
     name: 'Геометрия',
-    noOfCourses: 0,
     thumbnail: 'assets/icons/geometry.png',
   ),
   Subject(
     name: 'Геометрия',
-    noOfCourses: 0,
     thumbnail: 'assets/icons/geometry.png',
   ),
   Subject(
     name: 'Геометрия',
-    noOfCourses: 0,
     thumbnail: 'assets/icons/geometry.png',
   ),
   Subject(
     name: 'Геометрия',
-    noOfCourses: 0,
     thumbnail: 'assets/icons/geometry.png',
   ),
   Subject(
     name: 'Геометрия',
-    noOfCourses: 0,
-    thumbnail: 'assets/icons/geometry.png',
-  ),
-  Subject(
-    name: 'Геометрия',
-    noOfCourses: 0,
     thumbnail: 'assets/icons/geometry.png',
   ),
 ];

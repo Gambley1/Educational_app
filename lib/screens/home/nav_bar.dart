@@ -21,13 +21,11 @@ class _NavBarState extends State<NavBar> {
         padding: EdgeInsets.zero,
         children: <Widget>[
           UserAccountsDrawerHeader(
-            accountEmail: Text(
-              // '${loggedInUser.email}',
-              widget.user.token!,
-            ),
             accountName: Text(
-              // '${loggedInUser.firstName} ${loggedInUser.secondName}',
-              widget.user.email!,
+              widget.user.username!,
+            ),
+            accountEmail: Text(
+              widget.user.token!,
             ),
             currentAccountPicture: CircleAvatar(
               child: ClipOval(
@@ -48,10 +46,13 @@ class _NavBarState extends State<NavBar> {
           ListTile(
             leading: const Icon(Icons.analytics_outlined),
             title: const Text('Курсы'),
-            onTap: () => Navigator.of(context).push(MaterialPageRoute(
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(
                 builder: (context) => HomeScreen(
-                      user: widget.user,
-                    ))),
+                  user: widget.user,
+                ),
+              ),
+            ),
           ),
           const Divider(),
           ListTile(
@@ -67,13 +68,16 @@ class _NavBarState extends State<NavBar> {
               final logoutValue = await LoginService().logout();
               if (logoutValue == true) {
                 Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (_) => const LoginScreen()));
+                  MaterialPageRoute(
+                    builder: (_) => const LoginScreen(),
+                  ),
+                );
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     duration: Duration(seconds: 3),
                     content: Text(
-                      'Error with your token, have to login again',
+                      'Error with your data',
                     ),
                   ),
                 );

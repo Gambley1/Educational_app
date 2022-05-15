@@ -4,13 +4,25 @@ import 'package:educational_app/screens/login_screen.dart';
 import 'package:educational_app/services/login_service.dart';
 import 'package:flutter/material.dart';
 
-
 void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  late Future<UserModel> futureUserModel;
+
+  @override
+  void initState() {
+    super.initState();
+    futureUserModel = LoginService().getUser();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +54,9 @@ class MyApp extends StatelessWidget {
         ),
       ),
       home: FutureBuilder<UserModel>(
-        future: LoginService().getUser(),
+        // initstate Future<UserModel>.LoginService().getUser() to call it only once per frame
+        // futureUserModel is equal to LoginService().getUser()
+        future: futureUserModel,
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
@@ -56,7 +70,9 @@ class MyApp extends StatelessWidget {
               return const LoginScreen();
             default:
               if (snapshot.data != null) {
-                return HomeScreen(user: snapshot.data!,);
+                return HomeScreen(
+                  user: snapshot.data!,
+                );
               } else {
                 return const LoginScreen();
               }
