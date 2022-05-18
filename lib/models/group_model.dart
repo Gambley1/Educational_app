@@ -7,6 +7,9 @@ import 'dart:convert';
 List<Group> groupFromJson(String str) =>
     List<Group>.from(json.decode(str).map((x) => Group.fromJson(x)));
 
+Group oneGroupFromJson(String str) =>
+    Group.fromJson(json.decode(str));
+
 String groupToJson(List<Group> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
@@ -21,13 +24,15 @@ class Group {
   String name;
   DateTime createdDate;
 
-  factory Group.fromJson(Map<String, dynamic> json) => Group(
+  factory Group.fromJson(Map<String, dynamic> json) =>
+      Group(
         id: json["id"],
         name: json["name"],
         createdDate: DateTime.parse(json["created_date"]),
       );
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() =>
+      {
         "id": id,
         "name": name,
         "created_date": createdDate.toIso8601String(),
