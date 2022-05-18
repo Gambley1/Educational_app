@@ -1,36 +1,39 @@
+
+import 'dart:convert';
+
+List<Lesson> listLessonsFromJson(String str) =>
+    List<Lesson>.from(json.decode(str).map((x) => Lesson.fromJson(x)));
+
+Lesson oneLessonFromJson(String str) =>
+    Lesson.fromJson(json.decode(str));
+
 class Lesson {
+  String id;
   String name;
-  String duration;
+  String description;
+  String videoFileUrl;
+  String documentFileUrl;
+  String groupSubjectId;
+  String createdDate;
 
   Lesson({
-    required this.duration,
+    required this.id,
     required this.name,
+    required this.description,
+    required this.videoFileUrl,
+    required this.documentFileUrl,
+    required this.groupSubjectId,
+    required this.createdDate,
   });
-}
 
-List<Lesson> lessonList = [
-  Lesson(
-    duration: '11 min 20 sec',
-    name: "Why Flutter Development",
-  ),
-  Lesson(
-    duration: '10 min 11 sec',
-    name: "Setup Flutter on MacOS",
-  ),
-  Lesson(
-    duration: '7 min',
-    name: "Setup Flutter on Windows",
-  ),
-  Lesson(
-    duration: '5 min',
-    name: "Introduction to Flutter widgets.",
-  ),
-  Lesson(
-    duration: '5 min',
-    name: "What are Stateless Widgets?",
-  ),
-  Lesson(
-    duration: '5 min',
-    name: "What are Statefull Widgets?",
-  )
-];
+  factory Lesson.fromJson(Map<String, dynamic> json) =>
+      Lesson(
+        id: json["id"],
+        name: json["name"],
+        description: json["description"],
+        videoFileUrl: json["video_file_url"],
+        documentFileUrl: json["document_file_url"],
+        groupSubjectId: json["group_subject_id"],
+        createdDate: json["created_date"],
+      );
+}

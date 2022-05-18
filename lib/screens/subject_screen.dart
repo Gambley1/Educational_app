@@ -45,9 +45,6 @@ class _SubjectScreenState extends State<SubjectScreen> {
       });
     });
 
-    for(MySubjectOverall temp in currentMySubjectsOverall!){
-      print(temp.subject.name);
-    }
     super.initState();
   }
 
@@ -76,10 +73,10 @@ class _SubjectScreenState extends State<SubjectScreen> {
           delegate: SliverChildBuilderDelegate(
             (context, index) {
               return CategoryCard(
-                subject: subjectList[index],
+                subject: currentMySubjectsOverall![index],
               );
             },
-            childCount: subjectList.length,
+            childCount: currentMySubjectsOverall!.length,
           ),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
@@ -88,29 +85,14 @@ class _SubjectScreenState extends State<SubjectScreen> {
             childAspectRatio: 1.1,
           ),
         ),
-        SliverGrid(
-          delegate: SliverChildBuilderDelegate(
-            (context, index) {
-              return CategoryCard(
-                subject: subjectList[index],
-              );
-            },
-            childCount: subjectList.length,
-          ),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            mainAxisSpacing: 15,
-            crossAxisSpacing: 10,
-            childAspectRatio: 1.1,
-          ),
-        ),
+
       ],
     );
   }
 }
 
 class CategoryCard extends StatelessWidget {
-  final Subject subject;
+  final MySubjectOverall subject;
   final List<Group>? groups;
   final Group? group;
 
@@ -156,7 +138,7 @@ class CategoryCard extends StatelessWidget {
               Align(
                 alignment: Alignment.center,
                 child: Image.asset(
-                  subject.thumbnail,
+                  "assets/icons/algebra.png",
                   height: 75,
                   width: 75,
                 ),
@@ -164,7 +146,7 @@ class CategoryCard extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-              Text(subject.name, style: Theme.of(context).textTheme.bodyLarge),
+              Text(subject.subject.name, style: Theme.of(context).textTheme.bodyLarge),
               const SizedBox(
                 height: 8,
               ),

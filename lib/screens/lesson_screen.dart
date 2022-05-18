@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../models/group_model.dart';
+import '../models/lesson_model.dart';
 
 class LessonScreen extends StatelessWidget {
-  final Group group;
+  final Lesson group;
   const LessonScreen({
     Key? key,
     required this.group,

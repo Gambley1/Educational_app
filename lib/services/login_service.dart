@@ -7,7 +7,7 @@ import '../constants/client.dart';
 
 class LoginService {
   Future<UserModel> login(String username, String password) async {
-    final authUrl = Uri.http("192.168.0.16:5000", "/auth/login");
+    final authUrl = Uri.http(host, "/auth/login");
     final data = {"username": username, "password": password};
     var userDataJson = json.encode(data);
 

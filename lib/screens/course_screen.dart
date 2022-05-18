@@ -1,16 +1,20 @@
 import 'package:educational_app/constants/colors.dart';
+import 'package:educational_app/models/subejct_additional_model.dart';
 import 'package:educational_app/models/subjects_model.dart';
 import 'package:educational_app/services/group_service.dart';
+import 'package:educational_app/services/lesson_service.dart';
 import 'package:flutter/material.dart';
 
 import '../models/group_model.dart';
+import '../models/lesson_model.dart';
 import 'lesson_screen.dart';
 
 class CourseScreen extends StatefulWidget {
-  final Subject? subject;
+  final MySubjectOverall subject;
+
   const CourseScreen({
     Key? key,
-    this.subject,
+    required this.subject,
   }) : super(key: key);
 
   @override
@@ -19,18 +23,26 @@ class CourseScreen extends StatefulWidget {
 
 class _CourseScreenState extends State<CourseScreen> {
   late Future<List<Group>> futureListOfGroups;
+  late Future<List<Lesson>> futureLessons;
+  late List<Lesson> currentLessons;
 
   @override
   void initState() {
     futureListOfGroups = GroupService().getListOfGroups();
+    futureLessons = LessonService().getListOfLessons(widget.subject.groupSubject.id);
+    futureLessons.then((value){
+      setState(() {
+        currentLessons = value;
+      });
+    });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder<List<Group>>(
-        future: futureListOfGroups,
+      body: FutureBuilder<List<Lesson>>(
+        future: futureLessons,
         builder: (context, snapshot) {
           if (snapshot.data != null) {
             return CustomScrollView(
@@ -41,7 +53,7 @@ class _CourseScreenState extends State<CourseScreen> {
                   flexibleSpace: FlexibleSpaceBar(
                     title: RichText(
                       text: TextSpan(
-                        text: widget.subject!.name,
+                        text: widget.subject.subject.name,
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
                     ),
@@ -73,7 +85,8 @@ class _CourseScreenState extends State<CourseScreen> {
 }
 
 class GroupViewModel extends StatelessWidget {
-  final Group group;
+  final Lesson group;
+
   const GroupViewModel({
     Key? key,
     required this.group,

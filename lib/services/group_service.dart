@@ -54,7 +54,7 @@ class GroupService {
   Future<List<Group>> getListOfGroups() async {
     SharedPreferences storage = await SharedPreferences.getInstance();
     final accessToken = storage.getString('ACCESS_TOKEN');
-    final groupUrl = Uri.http("192.168.0.16:5000", "/group");
+    final groupUrl = Uri.http(host, "/group");
 
     var resp = await client.get(
       groupUrl,
