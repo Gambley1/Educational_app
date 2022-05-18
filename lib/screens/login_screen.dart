@@ -1,9 +1,10 @@
+import 'package:educational_app/constants/colors.dart';
 import 'package:educational_app/screens/home/home_screen.dart';
 import 'package:educational_app/screens/register_screen.dart';
+import 'package:educational_app/services/login_service.dart';
 import 'package:flutter/material.dart';
 
 import '../models/user_model.dart';
-import '../services/login_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -13,14 +14,15 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final LoginService _loginService = LoginService();
-
   final _formKey = GlobalKey<FormState>();
-
-  String? errorMessage;
 
   final TextEditingController userNameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -31,6 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
     final userNameField = TextFormField(
       autofocus: false,
       controller: userNameController,
@@ -46,6 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
       },
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
+        fillColor: Colors.black,
         prefixIcon: const Icon(Icons.account_circle),
         contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
         hintText: "Имя",
@@ -86,15 +90,14 @@ class _LoginScreenState extends State<LoginScreen> {
     final loginButton = Material(
       elevation: 5,
       borderRadius: BorderRadius.circular(30),
-      color: Colors.redAccent,
+      color: kPrimaryColor,
       child: MaterialButton(
         padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
         minWidth: MediaQuery.of(context).size.width,
         onPressed: () async {
-          // signIn(userNameController.text, passwordController.text);
           if (_formKey.currentState!.validate()) {
-            UserModel user = await _loginService.login(
-                userNameController.text, passwordController.text);
+            UserModel user = await LoginService()
+                .login(userNameController.text, passwordController.text);
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
                 builder: (_) => HomeScreen(user: user),
@@ -112,46 +115,46 @@ class _LoginScreenState extends State<LoginScreen> {
     );
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: kScaffoldColor,
       body: Center(
         child: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(height: 45),
-                userNameField,
-                const SizedBox(height: 25),
-                passwordField,
-                const SizedBox(height: 35),
-                loginButton,
-                const SizedBox(height: 15),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text("Ещё не зарегестрированны? "),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pushAndRemoveUntil(
-                            (context),
-                            MaterialPageRoute(
-                              builder: (context) => const RegisterScreen(),
-                            ),
-                            (route) => false);
-                      },
-                      child: const Text(
-                        "Регестрация",
-                        style: TextStyle(
-                            color: Colors.redAccent,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15),
-                      ),
-                    )
-                  ],
-                ),
-              ],
+          child: Padding(
+            padding: const EdgeInsets.all(36.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  userNameField,
+                  SizedBox(height: size.height * 0.025),
+                  passwordField,
+                  SizedBox(height: size.height * 0.04),
+                  loginButton,
+                  SizedBox(height: size.height * 0.02),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text("Ещё не зарегестрированны? "),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pushAndRemoveUntil(
+                              (context),
+                              MaterialPageRoute(
+                                builder: (context) => const RegisterScreen(),
+                              ),
+                              (route) => false);
+                        },
+                        child: const Text(
+                          "Регестрация",
+                          style: TextStyle(
+                              color: kPrimaryLight,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15),
+                        ),
+                      )
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

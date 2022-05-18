@@ -1,3 +1,4 @@
+import 'package:educational_app/constants/colors.dart';
 import 'package:educational_app/models/user_model.dart';
 import 'package:educational_app/services/register_service.dart';
 import 'package:flutter/material.dart';
@@ -13,10 +14,6 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  late Future<UserModel> futureRegisterUser;
-
-  String? errorMessage;
-
   final _formKey = GlobalKey<FormState>();
 
   final firstNameContoller = TextEditingController();
@@ -25,13 +22,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
-
-  @override
-  void initState() {
-    futureRegisterUser = RegisterService()
-        .register(passwordController.text.trim(), userNameController.text.trim());
-    super.initState();
-  }
 
   @override
   void dispose() {
@@ -45,6 +35,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
     final firstNameField = TextFormField(
       autofocus: false,
       controller: firstNameContoller,
@@ -136,7 +127,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         return null;
       },
       onSaved: (value) {
-        firstNameContoller.text = value!;
+        emailController.text = value!;
       },
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
@@ -164,7 +155,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         return null;
       },
       onSaved: (value) {
-        firstNameContoller.text = value!;
+        passwordController.text = value!;
       },
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
@@ -186,7 +177,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           return "Пароли не совпадают";
         }
         if (confirmPasswordController.text.isEmpty) {
-          return "Подтверждение пароля обязательно";
+          return "Подтвердите пароль";
         }
         return null;
       },
@@ -207,13 +198,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final signUpButton = Material(
       elevation: 5,
       borderRadius: BorderRadius.circular(30),
-      color: Colors.redAccent,
+      color: kPrimaryColor,
       child: MaterialButton(
         padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
         minWidth: MediaQuery.of(context).size.width,
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
-            UserModel user = await futureRegisterUser;
+            UserModel user = await RegisterService()
+                .register(passwordController.text, userNameController.text);
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
                 builder: (_) => HomeScreen(user: user),
@@ -231,64 +223,47 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
+      backgroundColor: kScaffoldColor,
       body: Center(
         child: SingleChildScrollView(
-          child: Container(
-            color: Colors.white,
-            child: Padding(
-              padding: const EdgeInsets.all(36.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    // firstNameField,
-                    // const SizedBox(height: 20),
-                    // secondNameField,
-                    // const SizedBox(height: 20),
-                    // userName,
-                    // const SizedBox(height: 20),
-                    userNameField,
-                    const SizedBox(height: 20),
-                    passwordField,
-                    const SizedBox(height: 20),
-                    // confirmPasswordField,
-                    // const SizedBox(
-                    //   height: 15,
-                    // ),
-                    signUpButton,
-                    const SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        const Text("Уже есть аккаунт? "),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.pushAndRemoveUntil(
-                                (context),
-                                MaterialPageRoute(
-                                  builder: (context) => const LoginScreen(),
-                                ),
-                                (route) => false);
-                          },
-                          child: const Text(
-                            "Войти",
-                            style: TextStyle(
-                                color: Colors.redAccent,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 15),
-                          ),
+          child: Padding(
+            padding: const EdgeInsets.all(36.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  userNameField,
+                  SizedBox(height: size.height * 0.025),
+                  passwordField,
+                  SizedBox(height: size.height * 0.025),
+                  confirmPasswordField,
+                  SizedBox(height: size.height * 0.04),
+                  signUpButton,
+                  SizedBox(height: size.height * 0.02),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text("Уже есть аккаунт? "),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pushAndRemoveUntil(
+                              (context),
+                              MaterialPageRoute(
+                                builder: (context) => const LoginScreen(),
+                              ),
+                              (route) => false);
+                        },
+                        child: const Text(
+                          "Войти",
+                          style: TextStyle(
+                              color: kPrimaryLight,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15),
                         ),
-                      ],
-                    ),
-                  ],
-                ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           ),

@@ -1,6 +1,6 @@
 import 'package:educational_app/constants/colors.dart';
 import 'package:educational_app/models/subjects_model.dart';
-import 'package:educational_app/services/group_service.dart';
+import 'package:educational_app/services/get_group_service.dart';
 import 'package:flutter/material.dart';
 
 import '../models/group_model.dart';
@@ -22,7 +22,7 @@ class _CourseScreenState extends State<CourseScreen> {
 
   @override
   void initState() {
-    futureListOfGroups = GroupService().getListOfGroups();
+    futureListOfGroups = GetGroupService().getListOfGroups();
     super.initState();
   }
 

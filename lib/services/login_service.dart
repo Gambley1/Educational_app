@@ -12,22 +12,24 @@ class LoginService {
     final data = {"username": username, "password": password};
     var userDataJson = json.encode(data);
 
-    var resp = await client.post(authUrl,
-        headers: {
-          "Accept": "application/json",
-        },
-        body: userDataJson);
+    var resp = await client.post(
+      authUrl,
+      headers: {
+        "Accept": "application/json",
+      },
+      body: userDataJson,
+    );
 
     var respTokenDict = json.decode(resp.body);
     var respToken = respTokenDict["access_token"];
 
-    var response = await client.get(
-      teacherSubjectUrl,
-      headers: {
-        "Accept": "application/json",
-        "Authorization": "Bearer " + respToken
-      },
-    );
+    // var response = await client.get(
+    //   teacherSubjectUrl,
+    //   headers: {
+    //     "Accept": "application/json",
+    //     "Authorization": "Bearer " + respToken
+    //   },
+    // );
 
     if (resp.statusCode == 200) {
       SharedPreferences storage = await SharedPreferences.getInstance();

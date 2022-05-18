@@ -2,7 +2,7 @@ import 'package:educational_app/constants/client.dart';
 import 'package:educational_app/models/group_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class GroupService {
+class GetGroupService {
   Future<List<Group>> getListOfGroups() async {
     SharedPreferences storage = await SharedPreferences.getInstance();
     final accessToken = storage.getString('ACCESS_TOKEN');

@@ -5,15 +5,18 @@ import 'package:flutter/material.dart';
 import '../../constants/colors.dart';
 import '../../constants/icon.dart';
 import '../../constants/size.dart';
+import '../../models/subjects_model.dart';
 import '../subject_screen.dart';
 import '../my_learnings_screen.dart';
 import 'nav_bar.dart';
 
 class HomeScreen extends StatefulWidget {
   final UserModel user;
+  final Subject? subject;
 
   const HomeScreen({
     Key? key,
+    this.subject,
     required this.user,
   }) : super(key: key);
 
@@ -26,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const List<Widget> _widgetOptions = <Widget>[
+    const List<Widget> _widgetOptions = [
       SubjectScreen(),
       MyLearningsScreen(),
       WishListScreen(),
