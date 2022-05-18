@@ -3,7 +3,7 @@ import 'package:educational_app/models/subjects_model.dart';
 import 'package:educational_app/services/group_service.dart';
 import 'package:flutter/material.dart';
 
-import '../models/data_model.dart';
+import '../models/group_model.dart';
 import 'lesson_screen.dart';
 
 class CourseScreen extends StatefulWidget {
@@ -18,21 +18,19 @@ class CourseScreen extends StatefulWidget {
 }
 
 class _CourseScreenState extends State<CourseScreen> {
-  late Future<List<Datum>?> futureListGroup;
+  late Future<List<Group>> futureListOfGroups;
 
   @override
   void initState() {
-    futureListGroup = GroupService().getListOfGroups();
+    futureListOfGroups = GroupService().getListOfGroups();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder<List<Datum>?>(
-        // initstate Future<List<Datum>>.GroupService().getListOfGroups() to call it only once per frame
-        // futureListGroup is equal to GroupService().getListOfGroups()
-        future: futureListGroup,
+      body: FutureBuilder<List<Group>>(
+        future: futureListOfGroups,
         builder: (context, snapshot) {
           if (snapshot.data != null) {
             return CustomScrollView(
@@ -43,8 +41,9 @@ class _CourseScreenState extends State<CourseScreen> {
                   flexibleSpace: FlexibleSpaceBar(
                     title: RichText(
                       text: TextSpan(
-                          text: widget.subject!.name,
-                          style: Theme.of(context).textTheme.titleLarge),
+                        text: widget.subject!.name,
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
                     ),
                     centerTitle: false,
                   ),
@@ -52,7 +51,7 @@ class _CourseScreenState extends State<CourseScreen> {
                 SliverGrid(
                   delegate: SliverChildBuilderDelegate(
                       (context, index) => GroupViewModel(
-                            data: snapshot.data![index],
+                            group: snapshot.data![index],
                           ),
                       childCount: snapshot.data!.length),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -74,10 +73,10 @@ class _CourseScreenState extends State<CourseScreen> {
 }
 
 class GroupViewModel extends StatelessWidget {
-  final Datum data;
+  final Group group;
   const GroupViewModel({
     Key? key,
-    required this.data,
+    required this.group,
   }) : super(key: key);
 
   @override
@@ -85,11 +84,13 @@ class GroupViewModel extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => LessonScreen(
-                      data: data,
-                    )));
+          context,
+          MaterialPageRoute(
+            builder: (context) => LessonScreen(
+              group: group,
+            ),
+          ),
+        );
       },
       child: Padding(
         padding: const EdgeInsets.all(12.0),
@@ -111,21 +112,21 @@ class GroupViewModel extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Name: ' + data.name!,
+                'Name: ' + group.name,
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
               const SizedBox(
                 height: 5,
               ),
               Text(
-                'year: ' + data.year.toString(),
+                'id: ' + group.id.toString(),
                 style: Theme.of(context).textTheme.bodySmall,
               ),
               const SizedBox(
                 height: 8,
               ),
               Text(
-                'pantone Value: ' + data.pantoneValue.toString(),
+                'created At: ' + group.createdDate.toString(),
                 style: Theme.of(context).textTheme.bodySmall,
               ),
             ],

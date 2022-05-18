@@ -1,34 +1,35 @@
 import 'dart:convert';
 
 import 'package:educational_app/models/user_model.dart';
-import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-class RegisterService {
-  Future<UserModel> register(
-      String email, String password, String username) async {
-    try {
-      var resp =
-          await http.post(Uri.parse('https://reqres.in/api/users'), body: {
-        'email': email,
-        'password': password,
-        'username': username,
-      });
+import '../constants/client.dart';
 
-      var response = await http.get(
-        Uri.parse('https://reqres.in/api/users'),
+class RegisterService {
+  Future<UserModel> register(String password, String username) async {
+    var authRegisterUrl = Uri.http("192.168.1.166:5000", "/auth/register");
+    String accessToken =
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NfdXVpZCI6ImQ0MGYzMzgwLTJiNjItNDU1Ni04MTc3LTRjMmNhZGNlMGVhOCIsImF1dGhvcml6ZWQiOnRydWUsImV4cCI6MTY1MjgxODE5MSwidXNlcl9pZCI6ImVmNTQwNDg3LTVhMzMtNDI3Ni1iYWIzLTBjMjI1YjVlM2U4YSIsInVzZXJfdHlwZSI6ImFkbWluIn0.SZ-gUbmmo1kDtH-zk56wr81Xiy5SfrL8YeV-LJE2bvY';
+    final data = {"username": username, "password": password};
+    var userDataJson = json.encode(data);
+    try {
+      var resp = await client.post(
+        authRegisterUrl,
+        headers: {
+          "Accept": "application/json",
+          "Authorization": "Bearer " + accessToken
+        },
+        body: userDataJson,
       );
 
-      if (resp.statusCode == 201) {
+      if (resp.statusCode == 200) {
         var respTokenDict = json.decode(resp.body);
-        var respToken = respTokenDict["token"];
+        var respToken = respTokenDict["access_token"];
         SharedPreferences storage = await SharedPreferences.getInstance();
         await storage.setString('PASSWORD', password);
-        await storage.setString('EMAIL', email);
         await storage.setString('USERNAME', username);
-        // await storage.setString('TOKEN', respToken);
-        print(json.decode(response.body));
-        return UserModel(email: email, username: username);
+        await storage.setString('ACCESS_TOKEN', respToken);
+        return UserModel(username: username, token: respToken);
       } else {
         throw Exception('Failed to load data!');
       }

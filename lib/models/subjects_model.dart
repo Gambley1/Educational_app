@@ -1,5 +1,3 @@
-import 'package:educational_app/models/data_model.dart';
-
 class Subject {
   String thumbnail;
   String name;
@@ -9,8 +7,6 @@ class Subject {
     required this.thumbnail,
   });
 }
-
-late List<Datum>? data;
 
 List<Subject> subjectList = [
   Subject(

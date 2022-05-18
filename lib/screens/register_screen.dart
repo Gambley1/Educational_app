@@ -13,24 +13,33 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  late Future<UserModel> futureRegisterUser;
+
   String? errorMessage;
 
   final _formKey = GlobalKey<FormState>();
 
-  final firstNameEditingController = TextEditingController();
-  final secondNameEditingController = TextEditingController();
-  final userNameEditingController = TextEditingController();
-  final emailEditingController = TextEditingController();
-  final passwordEditingController = TextEditingController();
-  final confirmPasswordEditingController = TextEditingController();
+  final firstNameContoller = TextEditingController();
+  final secondNameController = TextEditingController();
+  final userNameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
+
+  @override
+  void initState() {
+    futureRegisterUser = RegisterService()
+        .register(passwordController.text.trim(), userNameController.text.trim());
+    super.initState();
+  }
 
   @override
   void dispose() {
-    firstNameEditingController.dispose();
-    secondNameEditingController.dispose();
-    emailEditingController.dispose();
-    passwordEditingController.dispose();
-    confirmPasswordEditingController.dispose();
+    firstNameContoller.dispose();
+    secondNameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
     super.dispose();
   }
 
@@ -38,7 +47,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     final firstNameField = TextFormField(
       autofocus: false,
-      controller: firstNameEditingController,
+      controller: firstNameContoller,
       keyboardType: TextInputType.name,
       validator: (value) {
         RegExp regex = RegExp(r'^.{3,}$');
@@ -51,7 +60,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         return null;
       },
       onSaved: (value) {
-        firstNameEditingController.text = value!;
+        firstNameContoller.text = value!;
       },
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
@@ -66,7 +75,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     final secondNameField = TextFormField(
       autofocus: false,
-      controller: secondNameEditingController,
+      controller: secondNameController,
       keyboardType: TextInputType.name,
       validator: (value) {
         if (value!.isEmpty) {
@@ -75,7 +84,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         return null;
       },
       onSaved: (value) {
-        secondNameEditingController.text = value!;
+        secondNameController.text = value!;
       },
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
@@ -88,9 +97,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ),
     );
 
-    final userName = TextFormField(
+    final userNameField = TextFormField(
       autofocus: false,
-      controller: userNameEditingController,
+      controller: userNameController,
       keyboardType: TextInputType.name,
       validator: (value) {
         if (value!.isEmpty) {
@@ -99,7 +108,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         return null;
       },
       onSaved: (value) {
-        userNameEditingController.text = value!;
+        userNameController.text = value!;
       },
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
@@ -114,20 +123,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     final emailField = TextFormField(
       autofocus: false,
-      controller: emailEditingController,
+      controller: emailController,
       keyboardType: TextInputType.emailAddress,
       validator: (value) {
         if (value!.isEmpty) {
           return ("Пожалуйста, введите свой адрес электронной почты");
         }
         // reg expression for email validation
-        if (!RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]").hasMatch(value)) {
-          return ("Пожалуйста, введите действительный адрес электронной почты");
-        }
+        // if (!RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]").hasMatch(value)) {
+        //   return ("Пожалуйста, введите действительный адрес электронной почты");
+        // }
         return null;
       },
       onSaved: (value) {
-        firstNameEditingController.text = value!;
+        firstNameContoller.text = value!;
       },
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
@@ -142,20 +151,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     final passwordField = TextFormField(
       autofocus: false,
-      controller: passwordEditingController,
+      controller: passwordController,
       obscureText: true,
       validator: (value) {
-        RegExp regex = RegExp(r'^.{6,}$');
+        // RegExp regex = RegExp(r'^.{6,}$');
         if (value!.isEmpty) {
           return ("Пароль обязателен для регистрации");
         }
-        if (!regex.hasMatch(value)) {
-          return ("Пароль не может содержать меньше 6 символов");
-        }
+        // if (!regex.hasMatch(value)) {
+        //   return ("Пароль не может содержать меньше 6 символов");
+        // }
         return null;
       },
       onSaved: (value) {
-        firstNameEditingController.text = value!;
+        firstNameContoller.text = value!;
       },
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
@@ -170,20 +179,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     final confirmPasswordField = TextFormField(
       autofocus: false,
-      controller: confirmPasswordEditingController,
+      controller: confirmPasswordController,
       obscureText: true,
       validator: (value) {
-        if (confirmPasswordEditingController.text !=
-            passwordEditingController.text) {
+        if (confirmPasswordController.text != passwordController.text) {
           return "Пароли не совпадают";
         }
-        if (confirmPasswordEditingController.text.isEmpty) {
+        if (confirmPasswordController.text.isEmpty) {
           return "Подтверждение пароля обязательно";
         }
         return null;
       },
       onSaved: (value) {
-        confirmPasswordEditingController.text = value!;
+        confirmPasswordController.text = value!;
       },
       textInputAction: TextInputAction.done,
       decoration: InputDecoration(
@@ -205,10 +213,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         minWidth: MediaQuery.of(context).size.width,
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
-            UserModel user = await RegisterService().register(
-                emailEditingController.text,
-                passwordEditingController.text,
-                userNameEditingController.text);
+            UserModel user = await futureRegisterUser;
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
                 builder: (_) => HomeScreen(user: user),
@@ -247,9 +252,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     // const SizedBox(height: 20),
                     // secondNameField,
                     // const SizedBox(height: 20),
-                    userName,
-                    const SizedBox(height: 20),
-                    emailField,
+                    // userName,
+                    // const SizedBox(height: 20),
+                    userNameField,
                     const SizedBox(height: 20),
                     passwordField,
                     const SizedBox(height: 20),

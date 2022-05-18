@@ -34,10 +34,10 @@ class _LoginScreenState extends State<LoginScreen> {
     final userNameField = TextFormField(
       autofocus: false,
       controller: userNameController,
-      keyboardType: TextInputType.emailAddress,
+      keyboardType: TextInputType.name,
       validator: (value) {
         if (value!.isEmpty) {
-          return ("Пожалуйста, введите свой адрес электронной почты");
+          return ("Это поле не может быть пустым");
         }
         return null;
       },
@@ -46,9 +46,9 @@ class _LoginScreenState extends State<LoginScreen> {
       },
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
-        prefixIcon: const Icon(Icons.mail),
+        prefixIcon: const Icon(Icons.account_circle),
         contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-        hintText: "Почта",
+        hintText: "Имя",
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
         ),
@@ -56,27 +56,32 @@ class _LoginScreenState extends State<LoginScreen> {
     );
 
     final passwordField = TextFormField(
-        autofocus: false,
-        controller: passwordController,
-        obscureText: true,
-        validator: (value) {
-          if (value!.isEmpty) {
-            return ("Для входа требуется пароль");
-          }
-          return null;
-        },
-        onSaved: (value) {
-          passwordController.text = value!;
-        },
-        textInputAction: TextInputAction.done,
-        decoration: InputDecoration(
-          prefixIcon: const Icon(Icons.vpn_key),
-          contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-          hintText: "Пароль",
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-        ));
+      autofocus: false,
+      controller: passwordController,
+      obscureText: true,
+      validator: (value) {
+        // RegExp regex = RegExp(r'^.{6,}$');
+        if (value!.isEmpty) {
+          return ("Для входа обязателен пароль");
+        }
+        // if (!regex.hasMatch(value)) {
+        //   return ("Пароль не может содержать меньше 6 символов");
+        // }
+        return null;
+      },
+      onSaved: (value) {
+        passwordController.text = value!;
+      },
+      textInputAction: TextInputAction.next,
+      decoration: InputDecoration(
+        prefixIcon: const Icon(Icons.vpn_key),
+        contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
+        hintText: "Пароль",
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
+    );
 
     final loginButton = Material(
       elevation: 5,

@@ -1,18 +1,19 @@
-import 'package:educational_app/models/data_model.dart';
 import 'package:flutter/material.dart';
 
+import '../models/group_model.dart';
+
 class LessonScreen extends StatelessWidget {
-  final Datum data;
+  final Group group;
   const LessonScreen({
     Key? key,
-    required this.data,
+    required this.group,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Text(data.name!),
+        child: Text(group.name),
       ),
     );
   }

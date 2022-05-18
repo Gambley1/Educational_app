@@ -1,7 +1,7 @@
 import 'package:educational_app/models/user_model.dart';
 import 'package:educational_app/screens/home/home_screen.dart';
 import 'package:educational_app/screens/login_screen.dart';
-import 'package:educational_app/services/login_service.dart';
+import 'package:educational_app/services/get_user_service.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -16,12 +16,12 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  late Future<UserModel> futureUserModel;
+  Future<UserModel>? futureGetUser;
 
   @override
   void initState() {
+    futureGetUser = GetUserService().getUser();
     super.initState();
-    futureUserModel = LoginService().getUser();
   }
 
   @override
@@ -54,9 +54,7 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
       home: FutureBuilder<UserModel>(
-        // initstate Future<UserModel>.LoginService().getUser() to call it only once per frame
-        // futureUserModel is equal to LoginService().getUser()
-        future: futureUserModel,
+        future: futureGetUser,
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
