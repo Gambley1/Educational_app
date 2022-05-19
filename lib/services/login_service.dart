@@ -7,8 +7,7 @@ import '../constants/client.dart';
 
 class LoginService {
   Future<UserModel> login(String username, String password) async {
-    final authUrl = Uri.http("192.168.1.166:5000", "/auth/login");
-    final teacherSubjectUrl = Uri.http("192.168.1.166:5000", "/teacherSubject");
+    final authUrl = Uri.http(host, "/auth/login");
     final data = {"username": username, "password": password};
     var userDataJson = json.encode(data);
 
@@ -21,13 +20,13 @@ class LoginService {
     var respTokenDict = json.decode(resp.body);
     var respToken = respTokenDict["access_token"];
 
-    var response = await client.get(
-      teacherSubjectUrl,
-      headers: {
-        "Accept": "application/json",
-        "Authorization": "Bearer " + respToken
-      },
-    );
+    // var response = await client.get(
+    //   teacherSubjectUrl,
+    //   headers: {
+    //     "Accept": "application/json",
+    //     "Authorization": "Bearer " + respToken
+    //   },
+    // );
 
     if (resp.statusCode == 200) {
       SharedPreferences storage = await SharedPreferences.getInstance();

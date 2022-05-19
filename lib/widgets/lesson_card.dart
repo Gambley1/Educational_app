@@ -25,7 +25,7 @@ class LessonCard extends StatelessWidget {
                 ),
               ),
               Text(
-                lesson.duration,
+                lesson.description,
                 style: const TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w500,
