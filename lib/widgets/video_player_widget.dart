@@ -28,7 +28,6 @@ class _HomeState extends State<Home> {
     controller.initialize().then((value){
       setState(() {});
     });
-
   }
 
   @override
@@ -54,7 +53,7 @@ class _HomeState extends State<Home> {
                     child: VideoProgressIndicator(
                         controller,
                         allowScrubbing: true,
-                        colors:VideoProgressColors(
+                        colors:const VideoProgressColors(
                           backgroundColor: Colors.redAccent,
                           playedColor: Colors.green,
                           bufferedColor: Colors.purple,
