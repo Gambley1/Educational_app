@@ -1,0 +1,12 @@
+{
+    "workbench.colorCustomizations": {
+        "[Material Theme Darker]": {
+          "statusBar.debuggingBackground": "#212121"
+        }
+      },
+      "material-icon-theme.folders.associations": {
+        "global_state": "global",
+        "ui": "layout",
+        "bloc": "controller"
+      }
+}
