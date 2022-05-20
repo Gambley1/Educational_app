@@ -24,7 +24,6 @@ class MySubject {
       );
 }
 
-
 MyTeacherSubject oneMyTeacherSubjectFromJson(String str) =>
     MyTeacherSubject.fromJson(json.decode(str));
 
@@ -75,8 +74,8 @@ class MyGroupSubject {
 }
 
 List<MySubjectOverall> listSubjectOverall(String str) =>
-    List<MySubjectOverall>.from(json.decode(str).map((x) => MySubjectOverall.fromJson(x)));
-
+    List<MySubjectOverall>.from(
+        json.decode(str).map((x) => MySubjectOverall.fromJson(x)));
 
 class MySubjectOverall {
   MySubject subject;
@@ -89,9 +88,10 @@ class MySubjectOverall {
     required this.groupSubject,
   });
 
-  factory MySubjectOverall.fromJson(Map<String, dynamic> json) => MySubjectOverall(
-    subject: MySubject.fromJson(json["subject"]),
-    teacherSubject: MyTeacherSubject.fromJson(json["teacher_subject"]),
-    groupSubject: MyGroupSubject.fromJson(json["group_subject"]),
-  );
+  factory MySubjectOverall.fromJson(Map<String, dynamic> json) =>
+      MySubjectOverall(
+        subject: MySubject.fromJson(json["subject"]),
+        teacherSubject: MyTeacherSubject.fromJson(json["teacher_subject"]),
+        groupSubject: MyGroupSubject.fromJson(json["group_subject"]),
+      );
 }

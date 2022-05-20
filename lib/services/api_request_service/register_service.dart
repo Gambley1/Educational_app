@@ -1,10 +1,8 @@
 import 'dart:convert';
 
 import 'package:educational_app/models/user_model.dart';
+import 'package:educational_app/static/static_values.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../constants/client.dart';
-
 class RegisterService {
   Future<UserModel> register(String password, String username) async {
     var authRegisterUrl = Uri.http("192.168.1.166:5000", "/auth/register");
@@ -13,7 +11,7 @@ class RegisterService {
     final data = {"username": username, "password": password};
     var userDataJson = json.encode(data);
     try {
-      var resp = await client.post(
+      var resp = await StaticValues.client.post(
         authRegisterUrl,
         headers: {
           "Accept": "application/json",

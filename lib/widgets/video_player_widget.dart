@@ -1,17 +1,72 @@
+import 'package:educational_app/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
 import '../models/lesson_model.dart';
 
-class Home extends StatefulWidget{
-  final Lesson group;
-  const Home({Key? key, required this.group}) : super(key: key);
+class LessonContent extends StatefulWidget {
+  final Lesson lesson;
+  const LessonContent({
+    Key? key,
+    required this.lesson,
+  }) : super(key: key);
   @override
-  _HomeState createState() => _HomeState();
+  _LessonContentState createState() => _LessonContentState();
 }
 
-class _HomeState extends State<Home> {
+class _LessonContentState extends State<LessonContent> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            backgroundColor: kPrimaryColor,
+            floating: true,
+            flexibleSpace: FlexibleSpaceBar(
+              title: RichText(
+                text: TextSpan(
+                  children: <TextSpan>[
+                    TextSpan(
+                      text: widget.lesson.name,
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                  ],
+                ),
+              ),
+              centerTitle: false,
+            ),
+          ),
+          SliverGrid(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                return VideoPlayerView(lesson: widget.lesson);
+              },
+              childCount: 1,
+            ),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 1,
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
 
+class VideoPlayerView extends StatefulWidget {
+  final Lesson lesson;
+
+  const VideoPlayerView({
+    Key? key,
+    required this.lesson,
+  }) : super(key: key);
+
+  @override
+  State<VideoPlayerView> createState() => _VideoPlayerViewState();
+}
+
+class _VideoPlayerViewState extends State<VideoPlayerView> {
   late VideoPlayerController controller;
 
   @override
@@ -20,81 +75,57 @@ class _HomeState extends State<Home> {
     super.initState();
   }
 
-  loadVideoPlayer(){
-    controller = VideoPlayerController.network("https://storage.googleapis.com/silent-turbine-304510.appspot.com/n50-files/45a221be-100a-4047-8fe5-87e7b6bb8041_main.mp4");
+  loadVideoPlayer() {
+    controller = VideoPlayerController.network(widget.lesson.videoFileUrl);
     controller.addListener(() {
       setState(() {});
     });
-    controller.initialize().then((value){
+    controller.initialize().then((value) {
       setState(() {});
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
-      appBar: AppBar(
-        title: Text(widget.group.name),
-        backgroundColor: Colors.redAccent,
-      ),
-      body: Container(
-          child: Column(
-              children:[
-                AspectRatio(
-                  aspectRatio: controller.value.aspectRatio,
-                  child: VideoPlayer(controller),
-                ),
+    return Column(
+      children: [
+        AspectRatio(
+          aspectRatio: controller.value.aspectRatio,
+          child: VideoPlayer(controller),
+        ),
+        Text("Total Duration: " + controller.value.duration.toString()),
+        VideoProgressIndicator(controller,
+            allowScrubbing: true,
+            colors: VideoProgressColors(
+              backgroundColor: Colors.grey,
+              playedColor: const Color.fromARGB(255, 255, 0, 0),
+              bufferedColor: Colors.white.withOpacity(.77),
+            )),
+        Row(
+          children: [
+            IconButton(
+                onPressed: () {
+                  if (controller.value.isPlaying) {
+                    controller.pause();
+                  } else {
+                    controller.play();
+                  }
 
-                Container( //duration of video
-                  child: Text("Total Duration: " + controller.value.duration.toString()),
-                ),
+                  setState(() {});
+                },
+                icon: Icon(controller.value.isPlaying
+                    ? Icons.pause
+                    : Icons.play_arrow)),
+            IconButton(
+                onPressed: () {
+                  controller.seekTo(const Duration(seconds: 0));
 
-                Container(
-                    child: VideoProgressIndicator(
-                        controller,
-                        allowScrubbing: true,
-                        colors:const VideoProgressColors(
-                          backgroundColor: Colors.redAccent,
-                          playedColor: Colors.green,
-                          bufferedColor: Colors.purple,
-                        )
-                    )
-                ),
-
-                Container(
-                  child: Row(
-                    children: [
-                      IconButton(
-                          onPressed: (){
-                            if(controller.value.isPlaying){
-                              controller.pause();
-                            }else{
-                              controller.play();
-                            }
-
-                            setState(() {
-
-                            });
-                          },
-                          icon:Icon(controller.value.isPlaying?Icons.pause:Icons.play_arrow)
-                      ),
-
-                      IconButton(
-                          onPressed: (){
-                            controller.seekTo(Duration(seconds: 0));
-
-                            setState(() {
-
-                            });
-                          },
-                          icon:Icon(Icons.stop)
-                      )
-                    ],
-                  ),
-                )
-              ]
-          )
-      ),
+                  setState(() {});
+                },
+                icon: const Icon(Icons.stop))
+          ],
+        )
+      ],
     );
   }
 }

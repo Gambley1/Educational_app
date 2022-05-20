@@ -1,11 +1,9 @@
-
 import 'dart:convert';
 
 List<Lesson> listLessonsFromJson(String str) =>
     List<Lesson>.from(json.decode(str).map((x) => Lesson.fromJson(x)));
 
-Lesson oneLessonFromJson(String str) =>
-    Lesson.fromJson(json.decode(str));
+Lesson oneLessonFromJson(String str) => Lesson.fromJson(json.decode(str));
 
 class Lesson {
   String id;
@@ -26,8 +24,7 @@ class Lesson {
     required this.createdDate,
   });
 
-  factory Lesson.fromJson(Map<String, dynamic> json) =>
-      Lesson(
+  factory Lesson.fromJson(Map<String, dynamic> json) => Lesson(
         id: json["id"],
         name: json["name"],
         description: json["description"],

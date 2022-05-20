@@ -1,17 +1,17 @@
 import 'dart:convert';
 
 import 'package:educational_app/models/user_model.dart';
+import 'package:educational_app/static/static_values.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../constants/client.dart';
 
 class LoginService {
   Future<UserModel> login(String username, String password) async {
-    final authUrl = Uri.http(host, "/auth/login");
+    final authUrl = Uri.http(StaticValues.host, "/auth/login");
     final data = {"username": username, "password": password};
     var userDataJson = json.encode(data);
 
-    var resp = await client.post(authUrl,
+    var resp = await StaticValues.client.post(authUrl,
         headers: {
           "Accept": "application/json",
         },

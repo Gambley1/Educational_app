@@ -1,13 +1,11 @@
 import 'package:educational_app/constants/colors.dart';
+import 'package:educational_app/models/group_model.dart';
+import 'package:educational_app/models/lesson_model.dart';
 import 'package:educational_app/models/subejct_additional_model.dart';
-import 'package:educational_app/models/subjects_model.dart';
-import 'package:educational_app/services/group_service.dart';
-import 'package:educational_app/services/lesson_service.dart';
+import 'package:educational_app/screens/lesson_screen.dart';
+import 'package:educational_app/services/api_request_service/group_service.dart';
+import 'package:educational_app/services/api_request_service/lesson_service.dart';
 import 'package:flutter/material.dart';
-
-import '../models/group_model.dart';
-import '../models/lesson_model.dart';
-import 'lesson_screen.dart';
 
 class CourseScreen extends StatefulWidget {
   final MySubjectOverall subject;
@@ -29,8 +27,9 @@ class _CourseScreenState extends State<CourseScreen> {
   @override
   void initState() {
     futureListOfGroups = GroupService().getListOfGroups();
-    futureLessons = LessonService().getListOfLessons(widget.subject.groupSubject.id);
-    futureLessons.then((value){
+    futureLessons =
+        LessonService().getListOfLessons(widget.subject.groupSubject.id);
+    futureLessons.then((value) {
       setState(() {
         currentLessons = value;
       });
@@ -62,8 +61,8 @@ class _CourseScreenState extends State<CourseScreen> {
                 ),
                 SliverGrid(
                   delegate: SliverChildBuilderDelegate(
-                      (context, index) => GroupViewModel(
-                            group: snapshot.data![index],
+                      (context, index) => LessonViewModdel(
+                            lesson: snapshot.data![index],
                           ),
                       childCount: snapshot.data!.length),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -84,12 +83,12 @@ class _CourseScreenState extends State<CourseScreen> {
   }
 }
 
-class GroupViewModel extends StatelessWidget {
-  final Lesson group;
+class LessonViewModdel extends StatelessWidget {
+  final Lesson lesson;
 
-  const GroupViewModel({
+  const LessonViewModdel({
     Key? key,
-    required this.group,
+    required this.lesson,
   }) : super(key: key);
 
   @override
@@ -100,7 +99,7 @@ class GroupViewModel extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => LessonScreen(
-              group: group,
+              lesson: lesson,
             ),
           ),
         );
@@ -125,21 +124,21 @@ class GroupViewModel extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Name: ' + group.name,
+                'Name: ' + lesson.name,
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
               const SizedBox(
                 height: 5,
               ),
               Text(
-                'id: ' + group.id.toString(),
+                'id: ' + lesson.id.toString(),
                 style: Theme.of(context).textTheme.bodySmall,
               ),
               const SizedBox(
                 height: 8,
               ),
               Text(
-                'created At: ' + group.createdDate.toString(),
+                'created At: ' + lesson.createdDate.split('T')[0],
                 style: Theme.of(context).textTheme.bodySmall,
               ),
             ],

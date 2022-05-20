@@ -1,7 +1,7 @@
 import 'package:educational_app/models/user_model.dart';
 import 'package:educational_app/screens/home/home_screen.dart';
 import 'package:educational_app/screens/login_screen.dart';
-import 'package:educational_app/services/get_user_service.dart';
+import 'package:educational_app/services/api_request_service/get_user_service.dart';
 import 'package:flutter/material.dart';
 
 void main() {

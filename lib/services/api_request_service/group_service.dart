@@ -1,22 +1,27 @@
-import 'package:educational_app/constants/client.dart';
 import 'package:educational_app/models/group_model.dart';
 import 'package:educational_app/models/user_group.dart';
+import 'package:educational_app/services/controller/base_controller.dart';
+import 'package:educational_app/static/static_values.dart';
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:get/get.dart';
 
-class GroupService {
+class GroupService extends GetxController with BaseController {
   Future<Group> getCurrentGroup() async {
     SharedPreferences storage = await SharedPreferences.getInstance();
     final accessToken = storage.getString('ACCESS_TOKEN');
-    final groupUrl = Uri.http(host, "/userGroup/token");
+    final groupUrl = Uri.http(StaticValues.host, "/userGroup/token");
 
-    var resp = await client.get(
+    var resp = await StaticValues.client.get(
       groupUrl,
       headers: {
         "Accept": "application/json",
         "Authorization": "Bearer " + accessToken!,
       },
     );
-    print("group body:" + resp.body);
+    if (kDebugMode) {
+      print("group body:" + resp.body);
+    }
 
     if (resp.statusCode == 200) {
       List<UserGroup> userGroups = userGroupFromJson(resp.body);
@@ -24,6 +29,7 @@ class GroupService {
       await storage.setString('GROUP_ID', currentUserGroup.groupId);
       return getGroupById(currentUserGroup.groupId);
     } else {
+      hideLoading();
       throw Exception('Failed to load data!');
     }
   }
@@ -31,18 +37,20 @@ class GroupService {
   Future<Group> getGroupById(String id) async {
     SharedPreferences storage = await SharedPreferences.getInstance();
     final accessToken = storage.getString('ACCESS_TOKEN');
-    final groupByIdUrl = Uri.http(host, "/group/id", {
+    final groupByIdUrl = Uri.http(StaticValues.host, "/group/id", {
       "id": id,
     });
 
-    var res = await client.get(
+    var res = await StaticValues.client.get(
       groupByIdUrl,
       headers: {
         "Accept": "application/json",
         "Authorization": "Bearer " + accessToken!,
       },
     );
-    print("group by id " + id + " " + res.body);
+    if (kDebugMode) {
+      print("group by id " + id + " " + res.body);
+    }
     if (res.statusCode == 200) {
       var json = res.body;
       return oneGroupFromJson(json);
@@ -54,9 +62,9 @@ class GroupService {
   Future<List<Group>> getListOfGroups() async {
     SharedPreferences storage = await SharedPreferences.getInstance();
     final accessToken = storage.getString('ACCESS_TOKEN');
-    final groupUrl = Uri.http(host, "/group");
+    final groupUrl = Uri.http(StaticValues.host, "/group");
 
-    var resp = await client.get(
+    var resp = await StaticValues.client.get(
       groupUrl,
       headers: {
         "Accept": "application/json",

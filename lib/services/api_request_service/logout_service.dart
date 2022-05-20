@@ -4,8 +4,7 @@ class LogOutService {
   Future<bool> logout() async {
     SharedPreferences storage = await SharedPreferences.getInstance();
     final accessToken = storage.getString('ACCESS_TOKEN');
-    final email = storage.getString('EMAIL');
-    if (accessToken != null || email != null) {
+    if (accessToken != null) {
       await storage.remove('ACCESS_TOKEN');
       await storage.remove('PASSWORD');
       await storage.remove('EMAIL');

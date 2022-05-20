@@ -1,5 +1,5 @@
 import 'package:educational_app/models/user_model.dart';
-import 'package:educational_app/services/register_service.dart';
+import 'package:educational_app/services/api_request_service/register_service.dart';
 import 'package:flutter/material.dart';
 
 import 'home/home_screen.dart';

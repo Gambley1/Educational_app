@@ -1,10 +1,9 @@
 import 'package:educational_app/constants/colors.dart';
 import 'package:educational_app/models/subejct_additional_model.dart';
-import 'package:educational_app/models/subjects_model.dart';
-import 'package:educational_app/models/user_group.dart';
 import 'package:educational_app/models/user_model.dart';
-import 'package:educational_app/services/group_service.dart';
-import 'package:educational_app/services/subject_service.dart';
+import 'package:educational_app/services/api_request_service/group_service.dart';
+import 'package:educational_app/services/api_request_service/subject_service.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../models/group_model.dart';
@@ -32,7 +31,9 @@ class _SubjectScreenState extends State<SubjectScreen> {
   void initState() {
     futureListGroup = GroupService().getListOfGroups();
     futureCurrentGroup = GroupService().getCurrentGroup();
-    print("from future user group");
+    if (kDebugMode) {
+      print("from future user group");
+    }
     futureCurrentGroup.then((value) {
       setState(() {
         currentGroup = value;

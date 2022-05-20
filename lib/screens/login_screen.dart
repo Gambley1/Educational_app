@@ -1,9 +1,8 @@
+import 'package:educational_app/models/user_model.dart';
 import 'package:educational_app/screens/home/home_screen.dart';
 import 'package:educational_app/screens/register_screen.dart';
+import 'package:educational_app/services/api_request_service/login_service.dart';
 import 'package:flutter/material.dart';
-
-import '../models/user_model.dart';
-import '../services/login_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
