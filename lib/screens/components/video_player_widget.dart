@@ -2,7 +2,7 @@ import 'package:educational_app/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
-import '../models/lesson_model.dart';
+import '../../models/lesson_model.dart';
 
 class LessonContent extends StatefulWidget {
   final Lesson lesson;
@@ -78,10 +78,14 @@ class _VideoPlayerViewState extends State<VideoPlayerView> {
   loadVideoPlayer() {
     controller = VideoPlayerController.network(widget.lesson.videoFileUrl);
     controller.addListener(() {
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
     });
     controller.initialize().then((value) {
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
     });
   }
 

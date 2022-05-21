@@ -1,7 +1,7 @@
+import 'package:educational_app/screens/components/video_player_widget.dart';
 import 'package:flutter/material.dart';
 
 import '../models/lesson_model.dart';
-import '../widgets/video_player_widget.dart';
 
 class LessonScreen extends StatelessWidget {
   final Lesson lesson;

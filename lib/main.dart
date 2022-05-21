@@ -3,6 +3,7 @@ import 'package:educational_app/screens/home/home_screen.dart';
 import 'package:educational_app/screens/login_screen.dart';
 import 'package:educational_app/services/api_request_service/get_user_service.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 void main() {
   runApp(const MyApp());
@@ -26,7 +27,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Educational App',
       theme: ThemeData(

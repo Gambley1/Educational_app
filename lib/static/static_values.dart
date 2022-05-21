@@ -7,5 +7,5 @@ class StaticValues {
   static var client = http.Client();
 
   //host
-  static String host = "http://ec2-54-160-132-38.compute-1.amazonaws.com:5000";
+  static String host = "ec2-54-160-132-38.compute-1.amazonaws.com:5000";
 }

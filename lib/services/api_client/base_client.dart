@@ -6,11 +6,12 @@ import 'package:educational_app/services/api_client/app_exceptions.dart';
 import 'package:educational_app/static/static_values.dart';
 import 'package:http/http.dart' as http;
 
-class BaseClient {
+class BaseClientModel {
   // ignore: constant_identifier_names
   static const int TIME_OUT_DURATION = 20;
-  Future<dynamic> get(String api, Map<String, String> headers) async {
-    var uri = Uri.http(StaticValues.host, api);
+  Future<dynamic> getWithoutId(
+      String host, String api, Map<String, String> headers) async {
+    final uri = Uri.http(host, api);
     try {
       var response = await StaticValues.client
           .get(uri, headers: headers)
@@ -24,16 +25,47 @@ class BaseClient {
     }
   }
 
-  Future<dynamic> post(String api, Map<String, String> data) async {
-    var uri = Uri.http(StaticValues.host, api);
-    var jsonData = json.encode(data);
+  Future<dynamic> getWithId(
+    String host,
+    String api,
+    Map<String, dynamic> id,
+    Map<String, String> headers,
+  ) async {
+    final uri = Uri.http(host, api, id);
     try {
-      var response = await http.post(uri, body: jsonData).timeout(const Duration(seconds: TIME_OUT_DURATION));
+      var response = await StaticValues.client
+          .get(uri, headers: headers)
+          .timeout(const Duration(seconds: TIME_OUT_DURATION));
       return _processResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet connection', uri.toString());
     } on TimeoutException {
-      throw ApiNotRespondingException('API not responded in time', uri.toString());
+      throw ApiNotRespondingException(
+          'API not responded in time', uri.toString());
+    }
+  }
+
+  Future<dynamic> post(
+    String host,
+    String api,
+    Map<String, String> headers,
+    dynamic data,
+  ) async {
+    var uri = Uri.http(host, api);
+    var jsonData = json.encode(data);
+    try {
+      var response = await http
+          .post(
+            uri,
+            body: jsonData,
+          )
+          .timeout(const Duration(seconds: TIME_OUT_DURATION));
+      return _processResponse(response);
+    } on SocketException {
+      throw FetchDataException('No Internet connection', uri.toString());
+    } on TimeoutException {
+      throw ApiNotRespondingException(
+          'API not responded in time', uri.toString());
     }
   }
 
