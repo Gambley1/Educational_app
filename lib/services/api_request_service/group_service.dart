@@ -40,9 +40,6 @@ class GroupService extends GetxController with BaseController {
   Future<Group> getGroupById(String id) async {
     SharedPreferences storage = await SharedPreferences.getInstance();
     final accessToken = storage.getString('ACCESS_TOKEN');
-    final groupByIdUrl = Uri.http(StaticValues.host, "/group/id", {
-      "id": id,
-    });
 
     var res = await BaseClientModel().getWithId(
       StaticValues.host,

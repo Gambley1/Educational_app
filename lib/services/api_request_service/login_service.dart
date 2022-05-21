@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:educational_app/models/group_model.dart';
 import 'package:educational_app/models/user_model.dart';
 import 'package:educational_app/services/api_client/base_client.dart';
 import 'package:educational_app/services/controller/base_controller.dart';
@@ -16,6 +17,7 @@ class LoginService extends GetxController with BaseController {
     // var userDataJson = json.encode(data);
 
     showLoading("Posting data...");
+    Future.delayed(const Duration(seconds: 3));
     var resp = await BaseClientModel()
         .post(
             StaticValues.host,
@@ -33,16 +35,15 @@ class LoginService extends GetxController with BaseController {
       }
     });
 
-    var respTokenDict = json.decode(resp);
-    var respToken = respTokenDict["access_token"];
-
     if (resp != null) {
       hideLoading();
       SharedPreferences storage = await SharedPreferences.getInstance();
+      var respTokenDict = json.decode(resp);
+      var respToken = respTokenDict["access_token"];
       await storage.setString('ACCESS_TOKEN', respToken);
       await storage.setString('USERNAME', username);
       await storage.setString('PASSWORD', password);
-      return UserModel(username: username, token: respToken);
+      return userModelFromJson(resp);
     } else {
       hideLoading();
       throw Exception('Failed to load data!');

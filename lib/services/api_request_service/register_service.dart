@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:educational_app/models/user_model.dart';
 import 'package:educational_app/static/static_values.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 class RegisterService {
   Future<UserModel> register(String password, String username) async {
     var authRegisterUrl = Uri.http("192.168.1.166:5000", "/auth/register");

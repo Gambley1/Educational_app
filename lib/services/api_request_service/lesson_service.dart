@@ -4,7 +4,6 @@ import 'package:educational_app/services/controller/base_controller.dart';
 import 'package:educational_app/static/static_values.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LessonService extends GetxController with BaseController {

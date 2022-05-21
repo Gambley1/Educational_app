@@ -23,7 +23,8 @@ class _NavBarState extends State<NavBar> {
         children: <Widget>[
           UserAccountsDrawerHeader(
             accountName: Text(
-              widget.user.username,
+              // widget.user.username,
+              ''
             ),
             accountEmail: Text(
               widget.user.token,
