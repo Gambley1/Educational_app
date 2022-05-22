@@ -1,4 +1,4 @@
-import 'package:educational_app/models/subejct_additional_model.dart';
+import 'package:educational_app/models/subject_additional_model.dart';
 import 'package:educational_app/services/api_client/base_client.dart';
 import 'package:educational_app/services/controller/base_controller.dart';
 import 'package:educational_app/static/static_values.dart';
@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SubjectService extends GetxController with BaseController {
-  Future<List<MySubjectOverall>> getListOfSubjects() async {
+  Future<List<MySubjectOverall>?> getListOfSubjects() async {
     SharedPreferences storage = await SharedPreferences.getInstance();
     final accessToken = storage.getString('ACCESS_TOKEN');
     final id = storage.getString("GROUP_ID");

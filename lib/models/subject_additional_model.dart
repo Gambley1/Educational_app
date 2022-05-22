@@ -4,11 +4,10 @@ MySubject oneMySubjectFromJson(String str) =>
     MySubject.fromJson(json.decode(str));
 
 class MySubject {
-  String id;
-  String name;
-  String description;
-  String createdDate;
-
+  final String id;
+  final String name;
+  final String description;
+  final String createdDate;
   MySubject({
     required this.id,
     required this.name,
@@ -28,11 +27,10 @@ MyTeacherSubject oneMyTeacherSubjectFromJson(String str) =>
     MyTeacherSubject.fromJson(json.decode(str));
 
 class MyTeacherSubject {
-  String id;
-  String teacherId;
-  String subjectId;
-  String createdDate;
-
+  final String id;
+  final String teacherId;
+  final String subjectId;
+  final String createdDate;
   MyTeacherSubject({
     required this.id,
     required this.teacherId,
@@ -53,11 +51,10 @@ MyGroupSubject oneMyGroupSubjectFromJson(String str) =>
     MyGroupSubject.fromJson(json.decode(str));
 
 class MyGroupSubject {
-  String id;
-  String groupId;
-  String teacherSubjectId;
-  String createdDate;
-
+  final String id;
+  final String groupId;
+  final String teacherSubjectId;
+  final String createdDate;
   MyGroupSubject({
     required this.id,
     required this.groupId,
@@ -78,10 +75,9 @@ List<MySubjectOverall> listSubjectOverall(String str) =>
         json.decode(str).map((x) => MySubjectOverall.fromJson(x)));
 
 class MySubjectOverall {
-  MySubject subject;
-  MyTeacherSubject teacherSubject;
-  MyGroupSubject groupSubject;
-
+  final MySubject subject;
+  final MyTeacherSubject teacherSubject;
+  final MyGroupSubject groupSubject;
   MySubjectOverall({
     required this.subject,
     required this.teacherSubject,

@@ -1,3 +1,4 @@
+import 'package:educational_app/models/subject_additional_model.dart';
 import 'package:educational_app/models/user_model.dart';
 import 'package:educational_app/screens/home/home_screen.dart';
 import 'package:educational_app/screens/register_screen.dart';
@@ -96,7 +97,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 userNameController.text, passwordController.text);
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
-                builder: (_) => HomeScreen(user: user),
+                builder: (_) =>
+                    HomeScreen(user: user),
               ),
             );
           }

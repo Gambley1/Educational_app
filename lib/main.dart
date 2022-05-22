@@ -1,12 +1,29 @@
+import 'package:educational_app/bloc/group_model_bloc.dart';
+import 'package:educational_app/bloc/subject_addition_model_bloc.dart';
+import 'package:educational_app/constants/colors.dart';
+import 'package:educational_app/models/subject_additional_model.dart';
 import 'package:educational_app/models/user_model.dart';
 import 'package:educational_app/screens/home/home_screen.dart';
 import 'package:educational_app/screens/login_screen.dart';
 import 'package:educational_app/services/api_request_service/get_user_service.dart';
+import 'package:educational_app/services/api_request_service/group_service.dart';
+import 'package:educational_app/services/api_request_service/subject_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MultiBlocProvider(
+    providers: [
+      BlocProvider<SubjectAdditionModelBloc>(
+        create: (context) => SubjectAdditionModelBloc(SubjectService()),
+      ),
+      BlocProvider<GroupModelBloc>(
+        create: (context) => GroupModelBloc(GroupService()),
+      ),
+    ],
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatefulWidget {
@@ -18,6 +35,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   Future<UserModel>? futureGetUser;
+  List<MySubjectOverall>? subjectOverall;
 
   @override
   void initState() {
@@ -31,12 +49,13 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       title: 'Educational App',
       theme: ThemeData(
+        visualDensity: VisualDensity.adaptivePlatformDensity,
         primarySwatch: Colors.blue,
         fontFamily: 'Poppins',
         textTheme: const TextTheme(
           titleLarge: TextStyle(
             fontSize: 20,
-            color: Colors.white,
+            color: kPrimaryColor,
             fontWeight: FontWeight.w500,
           ),
           bodyLarge: TextStyle(

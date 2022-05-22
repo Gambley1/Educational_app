@@ -1,3 +1,4 @@
+import 'package:educational_app/models/subject_additional_model.dart';
 import 'package:educational_app/models/user_model.dart';
 import 'package:educational_app/screens/settings_screen.dart';
 import 'package:educational_app/screens/wish_list_screen.dart';
@@ -26,11 +27,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const List<Widget> _widgetOptions = <Widget>[
-      SubjectScreen(),
-      MyLearningsScreen(),
-      WishListScreen(),
-      SettingsScreen(),
+    List<Widget> _widgetOptions = [
+      SubjectScreen(
+        user: widget.user,
+      ),
+      const MyLearningsScreen(),
+      const WishListScreen(),
+      const SettingsScreen(),
     ];
     return Scaffold(
       drawer: NavBar(

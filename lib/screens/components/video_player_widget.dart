@@ -1,4 +1,3 @@
-import 'package:educational_app/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
@@ -21,7 +20,9 @@ class _LessonContentState extends State<LessonContent> {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            backgroundColor: kPrimaryColor,
+            iconTheme: const IconThemeData(color: Colors.black),
+            backgroundColor: Colors.transparent,
+            elevation: 0,
             floating: true,
             flexibleSpace: FlexibleSpaceBar(
               title: RichText(

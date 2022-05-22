@@ -1,7 +1,8 @@
-import 'package:educational_app/constants/colors.dart';
 import 'package:educational_app/models/group_model.dart';
 import 'package:educational_app/models/lesson_model.dart';
-import 'package:educational_app/models/subejct_additional_model.dart';
+import 'package:educational_app/models/subject_additional_model.dart';
+import 'package:educational_app/models/user_model.dart';
+import 'package:educational_app/screens/home/nav_bar.dart';
 import 'package:educational_app/screens/lesson_screen.dart';
 import 'package:educational_app/services/api_request_service/group_service.dart';
 import 'package:educational_app/services/api_request_service/lesson_service.dart';
@@ -9,10 +10,14 @@ import 'package:flutter/material.dart';
 
 class CourseScreen extends StatefulWidget {
   final MySubjectOverall subject;
+  final List<MySubjectOverall> subjectOverall;
+  final UserModel user;
 
   const CourseScreen({
     Key? key,
     required this.subject,
+    required this.user,
+    required this.subjectOverall,
   }) : super(key: key);
 
   @override
@@ -20,7 +25,7 @@ class CourseScreen extends StatefulWidget {
 }
 
 class _CourseScreenState extends State<CourseScreen> {
-  late Future<List<Group>> futureListOfGroups;
+  late Future<List<GroupModel>?> futureListOfGroups;
   late Future<List<Lesson>> futureLessons;
   late List<Lesson> currentLessons;
 
@@ -39,16 +44,35 @@ class _CourseScreenState extends State<CourseScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
+      drawer: NavBar(
+        user: widget.user,
+      ),
       body: FutureBuilder<List<Lesson>>(
         future: futureLessons,
         builder: (context, snapshot) {
           if (snapshot.data != null) {
             return CustomScrollView(
+              physics: const BouncingScrollPhysics(
+                parent: AlwaysScrollableScrollPhysics(),
+              ),
               slivers: [
                 SliverAppBar(
-                  backgroundColor: kPrimaryColor,
-                  floating: true,
+                  bottom: PreferredSize(
+                    preferredSize: Size.zero,
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        color: Color.fromARGB(255, 100, 99, 99),
+                      ),
+                      height: 2,
+                      width: size.width * 100,
+                    ),
+                  ),
+                  iconTheme: const IconThemeData(color: Colors.black),
+                  backgroundColor: Colors.transparent,
+                  elevation: 0,
+                  floating: false,
                   flexibleSpace: FlexibleSpaceBar(
                     title: RichText(
                       text: TextSpan(

@@ -1,17 +1,20 @@
-import 'package:educational_app/constants/colors.dart';
-import 'package:educational_app/models/subejct_additional_model.dart';
+import 'package:educational_app/bloc/subject_addition_model_bloc.dart';
+import 'package:educational_app/models/subject_additional_model.dart';
 import 'package:educational_app/models/user_model.dart';
 import 'package:educational_app/services/api_request_service/group_service.dart';
-import 'package:educational_app/services/api_request_service/subject_service.dart';
-import 'package:flutter/foundation.dart';
+import 'package:glassmorphism/glassmorphism.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart';
 
 import '../models/group_model.dart';
 import 'course_screen.dart';
 
 class SubjectScreen extends StatefulWidget {
+  final UserModel user;
   const SubjectScreen({
     Key? key,
+    required this.user,
   }) : super(key: key);
 
   @override
@@ -19,144 +22,179 @@ class SubjectScreen extends StatefulWidget {
 }
 
 class _SubjectScreenState extends State<SubjectScreen> {
-  late UserModel user;
-
-  late Future<List<Group>> futureListGroup;
-  late Future<Group> futureCurrentGroup;
-  late Future<List<MySubjectOverall>> futureMySubjectOverall;
-  Group? currentGroup;
-  List<MySubjectOverall>? currentMySubjectsOverall;
+  late Future<GroupModel?> futureCurrentGroup;
+  GroupModel? currentGroup;
 
   @override
   void initState() {
-    futureListGroup = GroupService().getListOfGroups();
     futureCurrentGroup = GroupService().getCurrentGroup();
-    if (kDebugMode) {
-      print("from future user group");
-    }
     futureCurrentGroup.then((value) {
       setState(() {
         currentGroup = value;
       });
     });
-    futureMySubjectOverall = SubjectService().getListOfSubjects();
-    futureMySubjectOverall.then((val) {
-      setState(() {
-        currentMySubjectsOverall = val;
-      });
-    });
-
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<MySubjectOverall>>(
-      future: futureMySubjectOverall,
-      builder: (context, snapshot) {
-        if (snapshot.data != null) {
-          return CustomScrollView(
-            slivers: [
-              SliverAppBar(
-                backgroundColor: kPrimaryColor,
-                floating: true,
-                flexibleSpace: FlexibleSpaceBar(
-                  title: RichText(
-                    text: TextSpan(
-                      children: <TextSpan>[
-                        TextSpan(
-                          text: currentGroup?.name,
-                          style: Theme.of(context).textTheme.titleLarge,
-                        ),
-                      ],
-                    ),
-                  ),
-                  centerTitle: false,
-                ),
-              ),
-              SliverGrid(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    return CategoryCard(
-                      subject: snapshot.data![index],
-                    );
-                  },
-                  childCount: snapshot.data!.length,
-                ),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 15,
-                  crossAxisSpacing: 10,
-                  childAspectRatio: 1.1,
-                ),
-              ),
-            ],
-          );
-        } else {
+    return BlocBuilder<SubjectAdditionModelBloc, SubjectAdditionModelState>(
+      builder: (context, state) {
+        if (state is SubjectAdditionModelInitialState) {
+          context
+              .read<SubjectAdditionModelBloc>()
+              .add(LoadSubjectAdditionModelEvent());
           return const Center(
             child: CircularProgressIndicator(),
           );
+        } else if (state is SubjectAdditionModelLoadingState) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (state is SubjectAdditionModelLoadedState) {
+          return customWidget(state.apiSubjectResult);
+        } else if (state is SubjectAdditionModelErrorState) {
+          return const Center(child: Text('Something went Wrong!'));
         }
+        return const Text('Error');
       },
+    );
+  }
+
+  Widget customWidget(List<MySubjectOverall> apiSubjectResult) {
+    var size = MediaQuery.of(context).size;
+    return CustomScrollView(
+      physics:
+          const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+      slivers: [
+        SliverAppBar(
+          bottom: PreferredSize(
+            preferredSize: Size.zero,
+            child: Container(
+              decoration: BoxDecoration(color: Colors.grey.withOpacity(.4)),
+              height: 2,
+              width: size.width,
+            ),
+          ),
+          iconTheme: const IconThemeData(color: Colors.black),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          floating: false,
+          flexibleSpace: FlexibleSpaceBar(
+            title: RichText(
+              text: TextSpan(
+                children: <TextSpan>[
+                  TextSpan(
+                    text: currentGroup?.name,
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                ],
+              ),
+            ),
+            centerTitle: false,
+          ),
+        ),
+        SliverGrid(
+          delegate: SliverChildBuilderDelegate(
+            (context, index) {
+              return CategoryCard(
+                subject: apiSubjectResult[index],
+                user: widget.user,
+                subjectOverall: apiSubjectResult,
+              );
+            },
+            childCount: apiSubjectResult.length,
+          ),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 1, childAspectRatio: 2.3),
+        ),
+      ],
     );
   }
 }
 
 class CategoryCard extends StatelessWidget {
+  final List<MySubjectOverall> subjectOverall;
   final MySubjectOverall subject;
+  final UserModel user;
 
   const CategoryCard({
     Key? key,
     required this.subject,
+    required this.user,
+    required this.subjectOverall,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => CourseScreen(
-            subject: subject,
-          ),
-        ),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(9.0),
-        child: Container(
-          padding: const EdgeInsets.only(left: 10),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(.1),
-                blurRadius: 4.0,
-                spreadRadius: .05,
-              ), //BoxShadow
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(
-                height: 13,
+    var size = MediaQuery.of(context).size;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 8),
+      child: InkWell(
+        onTap: () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CourseScreen(
+                subject: subject,
+                subjectOverall: subjectOverall,
+                user: user,
               ),
-              Align(
-                alignment: Alignment.center,
-                child: Image.asset(
-                  "assets/icons/algebra.png",
-                  height: 75,
-                  width: 75,
+            ),
+          );
+        },
+        child: SizedBox(
+          width: double.infinity,
+          child: Stack(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image(
+                  height: size.height,
+                  width: size.width,
+                  fit: BoxFit.cover,
+                  image: const NetworkImage(
+                      'https://besthqwallpapers.com/Uploads/24-8-2019/102582/thumb-education-is-very-important-gray-background-creative-art-education-motivation.jpg'),
                 ),
               ),
-              const SizedBox(
-                height: 10,
-              ),
-              Text(subject.subject.name,
-                  style: Theme.of(context).textTheme.bodyLarge),
-              const SizedBox(
-                height: 8,
+              Padding(
+                padding: const EdgeInsets.all(13.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          subject.subject.name.toUpperCase(),
+                          style: const TextStyle(
+                            fontSize: 18,
+                            color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(
+                          height: size.height * 0.002,
+                        ),
+                        Text(
+                          subject.subject.description,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Text(
+                      "Id: " + subject.subject.id,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

@@ -4,25 +4,23 @@
 
 import 'dart:convert';
 
-List<Group> groupFromJson(String str) =>
-    List<Group>.from(json.decode(str).map((x) => Group.fromJson(x)));
+List<GroupModel> groupsFromJson(String str) =>
+    List<GroupModel>.from(json.decode(str).map((x) => GroupModel.fromJson(x)));
 
-Group oneGroupFromJson(String str) =>
-    Group.fromJson(json.decode(str));
+GroupModel oneGroupFromJson(String str) =>
+    GroupModel.fromJson(json.decode(str));
 
-class Group {
-  Group({
+class GroupModel {
+  final String id;
+  final String name;
+  final String createdDate;
+  GroupModel({
     required this.id,
     required this.name,
     required this.createdDate,
   });
 
-  String id;
-  String name;
-  String createdDate;
-
-  factory Group.fromJson(Map<String, dynamic> json) =>
-      Group(
+  factory GroupModel.fromJson(Map<String, dynamic> json) => GroupModel(
         id: json["id"],
         name: json["name"],
         createdDate: json["created_date"],

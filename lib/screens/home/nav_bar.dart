@@ -17,76 +17,77 @@ class NavBar extends StatefulWidget {
 class _NavBarState extends State<NavBar> {
   @override
   Widget build(BuildContext context) {
-    return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: <Widget>[
-          UserAccountsDrawerHeader(
-            accountName: Text(
-              // widget.user.username,
-              ''
-            ),
-            accountEmail: Text(
-              widget.user.token,
-            ),
-            currentAccountPicture: CircleAvatar(
-              child: ClipOval(
-                child: Image.network(
-                  'https://cdn.landesa.org/wp-content/uploads/default-user-image.png',
-                  fit: BoxFit.cover,
-                ),
+    return SafeArea(
+      child: Drawer(
+        child: ListView(
+          children: [
+            UserAccountsDrawerHeader(
+              accountName: Text(
+                // widget.user.username!,
+                '',
               ),
-            ),
-            decoration: const BoxDecoration(
-                color: Colors.blue,
-                image: DecorationImage(
-                  image: NetworkImage(
-                      'https://cdn.cbeditz.com/cbeditz/preview/education-powerpoint-background-images-hd-2-11624479925ymmbq73hmy.jpg'),
-                  fit: BoxFit.cover,
-                )),
-          ),
-          ListTile(
-            leading: const Icon(Icons.analytics_outlined),
-            title: const Text('Курсы'),
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => HomeScreen(
-                  user: widget.user,
-                ),
+              accountEmail: Text(
+                widget.user.token,
               ),
-            ),
-          ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.settings),
-            title: const Text('Настройки'),
-            onTap: () => () {},
-          ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.logout),
-            title: const Text('Выйти'),
-            onTap: () async {
-              final logoutValue = await LogOutService().logout();
-              if (logoutValue == true) {
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (_) => const LoginScreen(),
+              currentAccountPicture: CircleAvatar(
+                child: ClipOval(
+                  child: Image.network(
+                    'https://cdn.landesa.org/wp-content/uploads/default-user-image.png',
+                    fit: BoxFit.cover,
                   ),
-                );
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    duration: Duration(seconds: 3),
-                    content: Text(
-                      'Error with your data',
+                ),
+              ),
+              decoration: const BoxDecoration(
+                  color: Colors.blue,
+                  image: DecorationImage(
+                    image: NetworkImage(
+                        'https://cdn.cbeditz.com/cbeditz/preview/education-powerpoint-background-images-hd-2-11624479925ymmbq73hmy.jpg'),
+                    fit: BoxFit.cover,
+                  )),
+            ),
+            ListTile(
+              leading: const Icon(Icons.analytics_outlined),
+              title: const Text('Курсы'),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => HomeScreen(
+                    user: widget.user,
+                  ),
+                ),
+              ),
+            ),
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.settings),
+              title: const Text('Настройки'),
+              onTap: () => () {},
+            ),
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.logout),
+              title: const Text('Выйти'),
+              onTap: () async {
+                final logoutValue = await LogOutService().logout();
+                if (logoutValue == true) {
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (_) => const LoginScreen(),
                     ),
-                  ),
-                );
-              }
-            },
-          ),
-        ],
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      duration: Duration(seconds: 3),
+                      content: Text(
+                        'Error with your data',
+                      ),
+                    ),
+                  );
+                }
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -1,3 +1,4 @@
+import 'package:educational_app/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 
 class MyLearningsScreen extends StatelessWidget {
@@ -5,8 +6,8 @@ class MyLearningsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(),
+    return const Scaffold(
+      body: LoginScreen(),
     );
   }
 }

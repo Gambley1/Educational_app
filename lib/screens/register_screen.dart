@@ -28,8 +28,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   void initState() {
-    futureRegisterUser = RegisterService()
-        .register(passwordController.text.trim(), userNameController.text.trim());
+    futureRegisterUser = RegisterService().register(
+        passwordController.text.trim(), userNameController.text.trim());
     super.initState();
   }
 
