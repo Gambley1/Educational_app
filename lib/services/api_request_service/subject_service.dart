@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SubjectService extends GetxController with BaseController {
-  Future<List<MySubjectOverall>?> getListOfSubjects() async {
+  Future<List<MySubjectOverall>> getListOfSubjects() async {
     SharedPreferences storage = await SharedPreferences.getInstance();
     final accessToken = storage.getString('ACCESS_TOKEN');
     final id = storage.getString("GROUP_ID");

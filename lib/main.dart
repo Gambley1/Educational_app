@@ -51,7 +51,6 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         visualDensity: VisualDensity.adaptivePlatformDensity,
         primarySwatch: Colors.blue,
-        fontFamily: 'Poppins',
         textTheme: const TextTheme(
           titleLarge: TextStyle(
             fontSize: 20,

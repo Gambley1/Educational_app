@@ -39,16 +39,16 @@ class _LessonContentState extends State<LessonContent> {
             ),
           ),
           SliverGrid(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                return VideoPlayerView(lesson: widget.lesson);
-              },
-              childCount: 1,
-            ),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 1,
-            ),
-          )
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  return VideoPlayerView(lesson: widget.lesson);
+                },
+                childCount: 2,
+              ),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 1,
+                childAspectRatio: 1.6,
+              ))
         ],
       ),
     );

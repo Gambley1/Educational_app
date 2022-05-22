@@ -19,6 +19,7 @@ dependencies:
   fluttertoast: ^8.0.9
   get: ^4.6.3
   glassmorphism: ^3.0.0
+  google_fonts: ^3.0.0
   http: ^0.13.4
   json_annotation: ^4.5.0
   json_serializable: ^6.2.0

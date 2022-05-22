@@ -1,3 +1,4 @@
+import 'package:educational_app/constants/colors.dart';
 import 'package:educational_app/models/subject_additional_model.dart';
 import 'package:educational_app/models/user_model.dart';
 import 'package:educational_app/screens/home/home_screen.dart';
@@ -86,7 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final loginButton = Material(
       elevation: 5,
       borderRadius: BorderRadius.circular(30),
-      color: Colors.redAccent,
+      color: kPrimaryColor,
       child: MaterialButton(
         padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
         minWidth: MediaQuery.of(context).size.width,
@@ -97,8 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 userNameController.text, passwordController.text);
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
-                builder: (_) =>
-                    HomeScreen(user: user),
+                builder: (_) => HomeScreen(user: user),
               ),
             );
           }
@@ -147,7 +147,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: const Text(
                           "Регестрация",
                           style: TextStyle(
-                              color: Colors.redAccent,
+                              color: kPrimaryLight,
                               fontWeight: FontWeight.bold,
                               fontSize: 15),
                         ),

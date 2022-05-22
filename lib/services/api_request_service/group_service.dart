@@ -10,7 +10,7 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class GroupService extends GetxController with BaseController {
-  Future<GroupModel?> getCurrentGroup() async {
+  Future<GroupModel> getCurrentGroup() async {
     SharedPreferences storage = await SharedPreferences.getInstance();
     final accessToken = storage.getString('ACCESS_TOKEN');
 
@@ -37,7 +37,7 @@ class GroupService extends GetxController with BaseController {
     }
   }
 
-  Future<GroupModel?> getGroupById(String id) async {
+  Future<GroupModel> getGroupById(String id) async {
     SharedPreferences storage = await SharedPreferences.getInstance();
     final accessToken = storage.getString('ACCESS_TOKEN');
 

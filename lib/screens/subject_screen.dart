@@ -22,7 +22,7 @@ class SubjectScreen extends StatefulWidget {
 }
 
 class _SubjectScreenState extends State<SubjectScreen> {
-  late Future<GroupModel?> futureCurrentGroup;
+  late Future<GroupModel> futureCurrentGroup;
   GroupModel? currentGroup;
 
   @override
@@ -38,7 +38,36 @@ class _SubjectScreenState extends State<SubjectScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SubjectAdditionModelBloc, SubjectAdditionModelState>(
+    var size = MediaQuery.of(context).size;
+    return NestedScrollView(headerSliverBuilder: (context, innerBoxIsScrolled) {
+      return [
+        SliverAppBar(
+          bottom: PreferredSize(
+            preferredSize: Size.zero,
+            child: Container(
+              decoration: const BoxDecoration(
+                color: Color.fromARGB(255, 100, 99, 99),
+              ),
+              height: 2,
+              width: size.width * 100,
+            ),
+          ),
+          iconTheme: const IconThemeData(color: Colors.black),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          floating: true,
+          flexibleSpace: FlexibleSpaceBar(
+            title: RichText(
+              text: TextSpan(
+                text: currentGroup?.name,
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+            ),
+            centerTitle: false,
+          ),
+        ),
+      ];
+    }, body: BlocBuilder<SubjectAdditionModelBloc, SubjectAdditionModelState>(
       builder: (context, state) {
         if (state is SubjectAdditionModelInitialState) {
           context
@@ -47,18 +76,28 @@ class _SubjectScreenState extends State<SubjectScreen> {
           return const Center(
             child: CircularProgressIndicator(),
           );
-        } else if (state is SubjectAdditionModelLoadingState) {
+        }
+        if (state is SubjectAdditionModelLoadingState) {
           return const Center(
             child: CircularProgressIndicator(),
           );
-        } else if (state is SubjectAdditionModelLoadedState) {
-          return customWidget(state.apiSubjectResult);
-        } else if (state is SubjectAdditionModelErrorState) {
-          return const Center(child: Text('Something went Wrong!'));
         }
-        return const Text('Error');
+        if (state is SubjectAdditionModelLoadedState) {
+          return customWidget(state.apiSubjectResult);
+        }
+        if (state is SubjectAdditionModelErrorState) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              Text('Вы не состоите ни в какой группе.'),
+              Text('Обратитесь к учителю, чтобы он добавил вас')
+            ],
+          );
+        }
+        return const Text('Ошибка');
       },
-    );
+    ));
   }
 
   Widget customWidget(List<MySubjectOverall> apiSubjectResult) {
@@ -67,33 +106,6 @@ class _SubjectScreenState extends State<SubjectScreen> {
       physics:
           const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
       slivers: [
-        SliverAppBar(
-          bottom: PreferredSize(
-            preferredSize: Size.zero,
-            child: Container(
-              decoration: BoxDecoration(color: Colors.grey.withOpacity(.4)),
-              height: 2,
-              width: size.width,
-            ),
-          ),
-          iconTheme: const IconThemeData(color: Colors.black),
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          floating: false,
-          flexibleSpace: FlexibleSpaceBar(
-            title: RichText(
-              text: TextSpan(
-                children: <TextSpan>[
-                  TextSpan(
-                    text: currentGroup?.name,
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                ],
-              ),
-            ),
-            centerTitle: false,
-          ),
-        ),
         SliverGrid(
           delegate: SliverChildBuilderDelegate(
             (context, index) {
@@ -128,78 +140,82 @@ class CategoryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 8),
-      child: InkWell(
-        onTap: () {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => CourseScreen(
-                subject: subject,
-                subjectOverall: subjectOverall,
-                user: user,
-              ),
-            ),
-          );
-        },
-        child: SizedBox(
-          width: double.infinity,
-          child: Stack(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Image(
-                  height: size.height,
-                  width: size.width,
-                  fit: BoxFit.cover,
-                  image: const NetworkImage(
-                      'https://besthqwallpapers.com/Uploads/24-8-2019/102582/thumb-education-is-very-important-gray-background-creative-art-education-motivation.jpg'),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(13.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          subject.subject.name.toUpperCase(),
-                          style: const TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
-                          ),
-                        ),
-                        SizedBox(
-                          height: size.height * 0.002,
-                        ),
-                        Text(
-                          subject.subject.description,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
+    return subjectOverall.isNotEmpty
+        ? Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 8),
+            child: InkWell(
+              onTap: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CourseScreen(
+                      subject: subject,
+                      subjectOverall: subjectOverall,
+                      user: user,
                     ),
-                    Text(
-                      "Id: " + subject.subject.id,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w400,
+                  ),
+                );
+              },
+              child: SizedBox(
+                width: double.infinity,
+                child: Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image(
+                        height: size.height,
+                        width: size.width,
+                        fit: BoxFit.cover,
+                        image: const NetworkImage(
+                            'https://besthqwallpapers.com/Uploads/24-8-2019/102582/thumb-education-is-very-important-gray-background-creative-art-education-motivation.jpg'),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(13.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                subject.subject.name.toUpperCase(),
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              SizedBox(
+                                height: size.height * 0.002,
+                              ),
+                              Text(
+                                subject.subject.description,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Text(
+                            "Id: " + subject.subject.id,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
-    );
+            ),
+          )
+        : const Center(
+            child: (Text('Вы не состоите ни в одной группе')),
+          );
   }
 }

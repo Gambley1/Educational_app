@@ -1,3 +1,4 @@
+import 'package:educational_app/constants/colors.dart';
 import 'package:educational_app/models/user_model.dart';
 import 'package:educational_app/services/api_request_service/register_service.dart';
 import 'package:flutter/material.dart';
@@ -207,7 +208,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final signUpButton = Material(
       elevation: 5,
       borderRadius: BorderRadius.circular(30),
-      color: Colors.redAccent,
+      color: kPrimaryColor,
       child: MaterialButton(
         padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
         minWidth: MediaQuery.of(context).size.width,
@@ -225,7 +226,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
           "Зарегестрироватся",
           textAlign: TextAlign.center,
           style: TextStyle(
-              fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+            fontSize: 20,
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );
@@ -267,7 +271,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        const Text("Уже есть аккаунт? "),
+                        const Text(
+                          "Уже есть аккаунт? ",
+                        ),
                         GestureDetector(
                           onTap: () {
                             Navigator.pushAndRemoveUntil(
@@ -280,9 +286,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           child: const Text(
                             "Войти",
                             style: TextStyle(
-                                color: Colors.redAccent,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 15),
+                              color: kPrimaryLight,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                            ),
                           ),
                         ),
                       ],
