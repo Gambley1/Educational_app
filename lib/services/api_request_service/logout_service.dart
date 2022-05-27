@@ -6,9 +6,6 @@ class LogOutService {
     final accessToken = storage.getString('ACCESS_TOKEN');
     if (accessToken != null) {
       await storage.remove('ACCESS_TOKEN');
-      await storage.remove('PASSWORD');
-      await storage.remove('EMAIL');
-      await storage.remove('USERNAME');
       return true;
     } else {
       return false;

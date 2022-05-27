@@ -1,13 +1,13 @@
 import 'dart:async';
 
-import 'package:educational_app/models/group_model.dart';
-import 'package:educational_app/models/user_group.dart';
 import 'package:educational_app/services/api_client/base_client.dart';
 import 'package:educational_app/services/controller/base_controller.dart';
 import 'package:educational_app/static/static_values.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../models/models.dart';
 
 class GroupService extends GetxController with BaseController {
   Future<GroupModel> getCurrentGroup() async {
@@ -22,19 +22,15 @@ class GroupService extends GetxController with BaseController {
         "Authorization": "Bearer " + accessToken!,
       },
     ).catchError(handleError);
-
     if (kDebugMode) {
       print("group body:" + resp);
     }
 
-    if (resp != null) {
-      List<UserGroup> userGroups = userGroupFromJson(resp);
-      UserGroup currentUserGroup = userGroups[0];
-      await storage.setString('GROUP_ID', currentUserGroup.groupId);
-      return getGroupById(currentUserGroup.groupId);
-    } else {
-      throw Exception('Failed to load data!');
-    }
+    List<UserGroup> userGroups = userGroupFromJson(resp);
+    UserGroup currentUserGroup = userGroups[0];
+    await storage.setString('GROUP_ID', currentUserGroup.groupId);
+    Future<GroupModel> groupById = getGroupById(currentUserGroup.groupId);
+    return groupById;
   }
 
   Future<GroupModel> getGroupById(String id) async {
@@ -56,15 +52,12 @@ class GroupService extends GetxController with BaseController {
     if (kDebugMode) {
       print("group by id " + id + " " + res);
     }
-    if (res != null) {
-      var json = res;
-      return oneGroupFromJson(json);
-    } else {
-      throw Exception('Failed to load data!');
-    }
+
+    GroupModel group = groupFromJson(res);
+    return group;
   }
 
-  Future<List<GroupModel>?> getListOfGroups() async {
+  Future<List<GroupModel>> getGroups() async {
     SharedPreferences storage = await SharedPreferences.getInstance();
     final accessToken = storage.getString('ACCESS_TOKEN');
 
@@ -77,11 +70,7 @@ class GroupService extends GetxController with BaseController {
       },
     ).catchError(handleError);
 
-    if (resp != null) {
-      var json = resp;
-      return groupsFromJson(json);
-    } else {
-      throw Exception('Failed to load data!');
-    }
+    List<GroupModel> groups = groupsFromJson(resp);
+    return groups;
   }
 }

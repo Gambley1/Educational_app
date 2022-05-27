@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'dart:async';
 
 import 'package:educational_app/services/api_client/app_exceptions.dart';
@@ -17,8 +16,6 @@ class BaseClientModel {
           .get(uri, headers: headers)
           .timeout(const Duration(seconds: TIME_OUT_DURATION));
       return _processResponse(response);
-    } on SocketException {
-      throw FetchDataException('No Internet connection', uri.toString());
     } on TimeoutException {
       throw ApiNotRespondingException(
           'API not responded in time', uri.toString());
@@ -37,8 +34,6 @@ class BaseClientModel {
           .get(uri, headers: headers)
           .timeout(const Duration(seconds: TIME_OUT_DURATION));
       return _processResponse(response);
-    } on SocketException {
-      throw FetchDataException('No Internet connection', uri.toString());
     } on TimeoutException {
       throw ApiNotRespondingException(
           'API not responded in time', uri.toString());
@@ -61,8 +56,6 @@ class BaseClientModel {
           )
           .timeout(const Duration(seconds: TIME_OUT_DURATION));
       return _processResponse(response);
-    } on SocketException {
-      throw FetchDataException('No Internet connection', uri.toString());
     } on TimeoutException {
       throw ApiNotRespondingException(
           'API not responded in time', uri.toString());

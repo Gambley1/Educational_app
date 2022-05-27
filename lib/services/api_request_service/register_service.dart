@@ -1,8 +1,9 @@
 import 'dart:convert';
 
-import 'package:educational_app/models/user_model.dart';
 import 'package:educational_app/static/static_values.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../models/models.dart';
 
 class RegisterService {
   Future<UserModel> register(String password, String username) async {
